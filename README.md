@@ -4,4 +4,6 @@ Reaact php fastApi
 
 本物のシマエナガとぬいぐるみのシマエナガの分別
 
+まずはphpでMVCモデルのひな形を用意する
+
 FastApi_ven: .venv\Scripts\activate 実行 uvicorn app.main:app --reload
