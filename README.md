@@ -6,4 +6,16 @@ Reaact php fastApi
 
 まずはphpでMVCモデルのひな形を用意する
 
+ログイン画面
+
+-------------------
+メールアドレス
+□□□□□□
+
+パスワード
+□□□□□□
+
+[ログイン]
+-------------------
+
 FastApi_ven: .venv\Scripts\activate 実行 uvicorn app.main:app --reload
