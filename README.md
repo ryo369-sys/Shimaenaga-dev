@@ -19,4 +19,8 @@ Reaact php fastApi
 [ログイン]
 -------------------
 
+[ダッシュボード]
+-------------------
+
+
 FastApi_ven: .venv\Scripts\activate 実行 uvicorn app.main:app --reload
