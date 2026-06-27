@@ -2,15 +2,12 @@
 
 require_once "../app/Controllers/TodoController.php";
 
-$controller = new TodoController();
-
-$uri = $_SERVER["REQUEST_URI"];
-$method = $_SERVER["REQUEST_METHOD"];
+$todocontroller = new TodoController();
 
 if ($uri === "/todos" && $method === "GET") {
-    $controller->index();
+    $todocontroller->index();
 }
 
 if ($uri === "/todos" && $method === "POST") {
-    $controller->store();
+    $todocontroller->store();
 }
