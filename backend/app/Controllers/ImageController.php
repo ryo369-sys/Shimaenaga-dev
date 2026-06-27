@@ -2,13 +2,13 @@
 
 require_once "../app/Models/Bird.php";
 
-class AuthController
+class ImageController
 {
     public function index()
     {
-        $Auth = new Auth();
+        $Img = new Img();
 
-        $result = $Auth->all();
+        $result = $Img->all();
 
         echo json_encode($result);
     }
