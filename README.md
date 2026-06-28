@@ -4,7 +4,7 @@ Reaact php fastApi
 
 本物のシマエナガとぬいぐるみのシマエナガの分別
 
-controllerのひな形を作成　→　modelの追加し忘れを確認してReactで実装をする　
+modelのAPI疎通できているかのためにReactの方を実装をする　
 
 
 ログイン画面
