@@ -7,13 +7,12 @@ Reaact php fastApi
 modelのAPI疎通できているかのためにReactの方を実装をする　
 
 作る順番
+React(ログイン)
+↓
 php
 ↓
-React
-↓
-fastApi
+fastApi(Resnet)
 
-ログイン画面
 
 -------------------
 メールアドレス
