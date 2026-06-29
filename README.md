@@ -6,6 +6,12 @@ Reaact php fastApi
 
 modelのAPI疎通できているかのためにReactの方を実装をする　
 
+作る順番
+php
+↓
+React
+↓
+fastApi
 
 ログイン画面
 
