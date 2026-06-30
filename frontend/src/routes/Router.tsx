@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Header from "../components/Header";
 import { Login } from "../components/Login";
 import { FailedLogin } from "../pages/FailedLogin";
-import { Home } from "../pages/Home";
+import  Home  from "../pages/Home";
 
 export const Router = () => {
   return (

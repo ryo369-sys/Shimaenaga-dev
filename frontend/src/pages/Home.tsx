@@ -1,5 +1,7 @@
 import { memo } from "react";
 
-export const Home = memo(() => {
-  return <p>Homeページです</p>;
-});
+function Home() {
+    return <div>Home</div>;
+}
+
+export default Home;
