@@ -2,6 +2,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Header from "./components/Header";
 import { Login } from "./components/Login";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import  Home  from "./pages/Home"
+import { Router } from "./routes/Router"; 
 
 function App() {
   const theme = createTheme({
@@ -13,8 +16,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
+      <BrowserRouter>
+      <Router />
       <Login />
+      <Home/>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
