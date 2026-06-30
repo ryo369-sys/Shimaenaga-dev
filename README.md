@@ -2,7 +2,7 @@ Reaact php fastApi
 
 フロント：React バックエンド：php(MVC) 画像解析:fastApiもといPython
 
-本物のシマエナガとぬいぐるみのシマエナガの分別
+本物のシマエナガとぬいぐるみのシマエナガの分別→写真撮影をするころ
 
 modelのAPI疎通できているかのためにReactの方を実装をする　
 
