@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import { Login } from "../components/Login";
 import { FailedLogin } from "../pages/FailedLogin";
 import  Home  from "../pages/Home";
+import  Profile  from "../pages/Profile";
+
 
 export const Router = () => {
   return (
@@ -18,6 +20,7 @@ export const Router = () => {
       />
       <Route path="/home" element={<Home />} />
       <Route path="/fail_login" element={<FailedLogin />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 };
