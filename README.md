@@ -9,7 +9,7 @@ modelのAPI疎通できているかのためにReactの方を実装をする　
 作る順番
 React(ログイン)
 ↓
-php
+php(axiosで行う)
 ↓
 fastApi(Resnet)
 
