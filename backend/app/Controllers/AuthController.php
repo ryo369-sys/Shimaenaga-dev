@@ -4,19 +4,23 @@ require_once "../app/Models/Bird.php";
 
 class AuthController
 {
-    public function index()
+    public function login()
     {
-        $Auth = new Auth();
+        $request = json_decode(
+            file_get_contents("php://input"),
+            true
+        );
 
-        $result = $Auth->all();
+        $userId = $request["user_id"];
+        $password = $request["password"];
+
+        $model = new UserModel();
+
+        $result = $model->login(
+            $userId,
+            $password
+        );
 
         echo json_encode($result);
-    }
-
-    public function store()
-    {
-        echo json_encode([
-            "message" => "登録成功"
-        ]);
     }
 }
