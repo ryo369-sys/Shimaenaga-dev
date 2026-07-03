@@ -8,11 +8,11 @@ import {
   TextField,
 } from "@mui/material";
 import { memo, useState } from "react";
-import { login } from "../services/auth";
+import { todoGet } from "../services/todo";
 
-export const Login = memo(() => {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+export const Todo = memo(() => {
+  const [todoTitle, setTodoTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const cardStyle = {
     display: "block",
@@ -23,11 +23,11 @@ export const Login = memo(() => {
   };
 
   
-const onClickLogin = async () => {
+const onClickTodoGet = async () => {
 
-    const response = await login(
-        userId,
-        password,
+    const response = await todoGet(
+        todoTitle,
+        content,
     );
 
     console.log(response.data);
@@ -43,7 +43,7 @@ const onClickLogin = async () => {
         }}
     >
       <Card style={cardStyle}>
-        <CardHeader title="ログインページ" />
+        <CardHeader title="todoList" />
         <CardContent>
           <div>
             <TextField
@@ -53,7 +53,7 @@ const onClickLogin = async () => {
               label="Username"
               placeholder="Username"
               margin="normal"
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => setTodoTitle(e.target.value)}
             />
             <TextField
               fullWidth
@@ -62,7 +62,7 @@ const onClickLogin = async () => {
               label="Password"
               placeholder="Password"
               margin="normal"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setContent(e.target.value)}
             />
           </div>
         </CardContent>
@@ -71,7 +71,7 @@ const onClickLogin = async () => {
             variant="contained"
             size="large"
             color="secondary"
-            onClick={onClickLogin}
+            onClick={onClickTodoGet}
           >
             Login
           </Button>
