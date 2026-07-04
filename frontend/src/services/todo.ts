@@ -3,13 +3,15 @@ import axios from "axios";
 //todoデータの編集
 export const todoGet = (
   userId: string,
-  password: string
+  password: string,
+  comment: string
 ) => {
   return axios.post(
     "http://localhost:1323/api/Todo",
     {
       user_id: userId,
-      password: password
+      password: password,
+      comment: comment
     }
   );
 };
