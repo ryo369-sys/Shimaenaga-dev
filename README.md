@@ -4,16 +4,22 @@ Reaact php fastApi
 
 本物のシマエナガとぬいぐるみのシマエナガの分別→写真撮影をするころ
 
-modelのAPI疎通の確認のためログインできるか確認する前段階
-※まだDBの構築がまだすぁることとphp側でリポジトリで編集するかも不明
+やりたいこと
+modelのAPI疎通の確認のためログインできるか確認する
+DBの構築する
+php側でリポジトリで編集するか考える
 
 
 作る順番
-React(ログイン)
+React(axios)
 ↓
-php(axiosで行う)
+php(file_get_contents()で行う)
 ↓
-fastApi(Resnet)
+fastApi(Resnet　レスポンスにreturn {})
+↓
+php(echo json_encode()で行う)
+↓
+React(`response.data` / `response.json()`)
 
 
 -------------------
