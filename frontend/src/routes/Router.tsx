@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import { Login } from "../pages/Login";
 import { FailedLogin } from "../pages/FailedLogin";
 import  Home  from "../pages/Home";
-import { Todo } from "../pages/Todo";
+import { Todo } from "../pages/todo";
 import  Profile  from "../pages/Profile";
 import  Bird  from "../pages/Bird";
 
