@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import { birdGet } from "../services/bird";
+import  RetuenBotton  from "../components/ReturnBotton";
+
 
 export const Bird = memo(() => {
   const [birdId, setBirdId] = useState("");
@@ -75,6 +77,7 @@ const onClickBird = async () => {
           >
             Bird
           </Button>
+          <RetuenBotton/>
         </CardActions>
       </Card>
     </Box>
