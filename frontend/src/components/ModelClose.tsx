@@ -1,21 +1,20 @@
-import React from "react";
-
-const ModalClose = (props) => {
-  return (
-    <>
-      {props.showFlag ? ( // showFlagがtrueだったらModalを表示する
-        <div id="overlay">
-          <div id="modalContent">
-            <h1>ModalClose</h1>
-            <p>This is CloseModalContent</p>
-            <button>Close Modal</button>
-          </div>
-        </div>
-      ) : (
-        <></>// showFlagがfalseの場合はModalは表示しない
-      )}
-    </>
-  );
+type Props = {
+  isClose: boolean;
+  onClose: () => void;
 };
 
-export default ModalClose;
+export const Modalclose = ({ isClose, onClose }: Props) => {
+  if (!isClose) return null;
+
+  return (
+    <div>
+      <div>
+        <h2>モーダル</h2>
+
+        <button onClick={onClose}>
+          閉じる
+        </button>
+      </div>
+    </div>
+  );
+};

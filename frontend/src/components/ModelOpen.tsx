@@ -1,24 +1,20 @@
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
-
-type ChildProps = {
-  showFlag: boolean;
+type Props = {
+  isOpen: boolean;
+  onOpen: () => void;
 };
 
-const ModalOpen = ({showFlag}:ChildProps) => {
-    const [showModal, setShowModal] = useState(false);
-    setShowModal(true);
+export const Modalopen = ({ isOpen, onOpen }: Props) => {
+  if (isOpen) return null;
 
-    if (showFlag) return null;    
-    else{
-        return(
-        <>
-            <h1>ModalOpen</h1>
-            <button onClick={ModalOpen}>Open Modal</button>
-        </>
-        )
-    }
+  return (
+    <div>
+      <div>
+        <h2>モーダル</h2>
+
+        <button onClick={onOpen}>
+          開ける
+        </button>
+      </div>
+    </div>
+  );
 };
-
-export default ModalOpen;
-

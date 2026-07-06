@@ -2,17 +2,16 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
 type Props = {
-  showFlag: boolean;
   imageUrl: string;
-  result: {
-    label: string;
-    confidence: number;
-  };
+  label: string;
+  confidence: number;
 };
 
-const Modal = ({showFlag}:Props) => {
-    const [showModal, setShowModal] = useState(false);
-    setShowModal(true);
+export const Model = ({
+  imageUrl,
+  label,
+  confidence
+}: Props) => {
 
     return (
   <div> {/* 背景 */}
@@ -23,13 +22,15 @@ const Modal = ({showFlag}:Props) => {
 
       {/* ① 画像 */}
       <img
-        src="sample.jpg"
-        alt="bird"
-        width={200}
+        src={imageUrl}
+        alt="imgFile"
+        width={300}
       />
 
+      {/* 画像URL */}
+
       {/* ② AI結果 */}
-      <p>AI判定結果:シマエナガ 87%</p>
+      <p>AI判定結果:{label} {confidence}</p>
 
       {/* ③ コメント */}
       <textarea
@@ -45,8 +46,6 @@ const Modal = ({showFlag}:Props) => {
     </div>
 
   </div>
-);
-};
+)};
 
-export default Modal;
-
+export default Model;
