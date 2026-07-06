@@ -9,11 +9,23 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import { todoGet } from "../services/todo";
+import Model from "../components/Model";
+
+const imageUrl = "/sample.jpg";
+
+const result = ([
+  {
+  label: "シマエナガ",
+  confidence: 87,
+  }
+]);
+
 
 export const Todo = memo(() => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [comment, setComment] = useState("");
+
 
   const cardStyle = {
     display: "block",
@@ -44,6 +56,7 @@ const onClickTodoGet = async () => {
           padding : 20
         }}
     >
+      <Model imageUrl = {imageUrl} label = {result[0].label} confidence = {result[0].confidence}/>
       <Card style={cardStyle}>
         <CardHeader title="todoList" />
         <CardContent>
