@@ -4,6 +4,7 @@ import { Login } from "../pages/Login";
 import { FailedLogin } from "../pages/FailedLogin";
 import  Home  from "../pages/Home";
 import { Todo } from "../pages/todo";
+import  Dashboard  from "../pages/test";
 import  Profile  from "../pages/Profile";
 import  Bird  from "../pages/Bird";
 

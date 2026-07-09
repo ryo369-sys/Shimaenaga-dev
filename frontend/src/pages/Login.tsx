@@ -7,12 +7,19 @@ import {
   CardHeader,
   TextField,
 } from "@mui/material";
+import React from 'react';
 import { memo, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { FC } from 'react'
 import { login } from "../services/auth";
 
-export const Login = memo(() => {
+export const Login : FC =() => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const cardStyle = {
     display: "block",
@@ -22,15 +29,28 @@ export const Login = memo(() => {
     variant: "outlined",
   };
   
-const onClickLogin = async () => {
-
-    const response = await login(
-        userId,
-        password,
-    );
+const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+  try{
+    const response = await axios.post('http://localhost:8000/api/login',{
+        user_id: userId,
+        password: password
+    });
 
     console.log(response.data);
-};
+
+    if (response.data.success) {
+        setMessage('ログイン成功！');
+        // 🚀 成功したらダッシュボードページへジャンプ！
+        navigate('/dashboard'); 
+      } else {
+        setMessage(response.data.message || 'ログイン失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage('エラーが発生しました');
+    }
+  };
 
   return (
     <Box
@@ -64,13 +84,15 @@ const onClickLogin = async () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {/* 💡 画面にエラーや成功メッセージを出すために、ここに表示用タグを置いておくと便利です */}
+          {message && <p style={{ color: message.includes('成功') ? 'green' : 'red' }}>{message}</p>}
         </CardContent>
         <CardActions>
           <Button
             variant="contained"
             size="large"
             color="secondary"
-            onClick={onClickLogin}
+            onClick={handleLogin}
           >
             Login
           </Button>
@@ -78,4 +100,4 @@ const onClickLogin = async () => {
       </Card>
     </Box>
   );
-});
+};
