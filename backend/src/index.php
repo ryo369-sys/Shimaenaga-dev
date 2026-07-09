@@ -1,4 +1,38 @@
 <?php
+
+require_once __DIR__ . '/../app/Controllers/AuthController.php';
+
+// 🚀【超重要】PHPの内部エラーを隠さずに、すべて画面に出力させる設定
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'];
+
+// 🚀【重要】URLの末尾が /api/login だったら、メソッドに関係なくCORS許可ヘッダーを真っ先に返す
+if (str_ends_with($uri, "/api/login")) {
+    
+    // ReactのURL（http://localhost:5173）からのアクセスを100%許可する設定
+    header("Access-Control-Allow-Origin: http://localhost:5173"); 
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+    header("Content-Type: application/json; charset=UTF-8");
+
+    // もしブラウザからの確認電波（OPTIONS）だったら、ヘッダーだけ返して即終了する
+    if ($method === "OPTIONS") {
+        http_response_code(200);
+        exit;
+    }
+
+    // 本番の POST リクエストだった場合は、Controllerを動かす
+    if ($method === "POST") {
+        require_once __DIR__ . '/../app/Controllers/AuthController.php';
+        $authController = new AuthController();
+        $authController->login();
+        exit; 
+    }
+}
+
 // ① データベースの接続情報
 $host     = 'localhost';
 $dbname   = 'shimaenaga_app';
