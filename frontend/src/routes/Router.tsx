@@ -13,7 +13,7 @@ export const Router = () => {
   return (
     <Routes>
       <Route
-        path="/login"
+        path="/"
         element={
           <>
             <Header />
@@ -22,6 +22,7 @@ export const Router = () => {
         }
       />
       
+      <Route path="/dashboard/:useId" element={<Dashboard />} />
       <Route path="/home" element={<Home />} />
       <Route path="/todo" element={<Todo />} />
       <Route path="/bird" element={<Bird />} />

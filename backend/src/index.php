@@ -33,34 +33,34 @@ if (str_ends_with($uri, "/api/login")) {
     }
 }
 
-// ① データベースの接続情報
-$host     = 'localhost';
-$dbname   = 'shimaenaga_app';
-$username = 'root';
-$password = 'Xrqd75uz917!';
-$charset  = 'utf8mb4';
+// // ① データベースの接続情報
+// $host     = 'localhost';
+// $dbname   = 'shimaenaga_app';
+// $username = 'root';
+// $password = 'Xrqd75uz917!';
+// $charset  = 'utf8mb4';
 
-// 接続オプション（エラー時に例外を投げる、連想配列で結果を受け取るなど）
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
+// // 接続オプション（エラー時に例外を投げる、連想配列で結果を受け取るなど）
+// $options = [
+//     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+//     PDO::ATTR_EMULATE_PREPARES   => false,
+// ];
 
-$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+// $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
 
-try {
-    // ② MySQLへ接続
-    $pdo = new PDO($dsn, $username, $password, $options);
+// try {
+//     // ② MySQLへ接続
+//     $pdo = new PDO($dsn, $username, $password, $options);
     
-    // ③ SQL文の準備と実行（usersテーブルからデータを全件取得）
-    $stmt = $pdo->query('SELECT * FROM users');
-    $users = $stmt->fetchAll();
+//     // ③ SQL文の準備と実行（usersテーブルからデータを全件取得）
+//     $stmt = $pdo->query('SELECT * FROM users');
+//     $users = $stmt->fetchAll();
 
-} catch (\PDOException $e) {
-    // 接続エラーなどが起きた場合はここでキャッチする
-    die("データベース接続エラー: " . $e->getMessage());
-}
+// } catch (\PDOException $e) {
+//     // 接続エラーなどが起きた場合はここでキャッチする
+//     die("データベース接続エラー: " . $e->getMessage());
+// }
 ?>
 
 <!DOCTYPE html>
