@@ -10,6 +10,11 @@ modelのAPI疎通の確認のためログインできるか確認する
 php側でリポジトリで編集するか考える
 React,php,fastApiでインターファイスを実装する
 
+実行方法
+React : npm run dev 
+php : php -S localhost:8000
+fastApi : uvicorn main:app --reload
+
 作る順番
 React(axios)
 ↓
