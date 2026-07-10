@@ -2,6 +2,8 @@
 
 require_once "../app/Models/User.php";
 
+
+
 class AuthController
 {
     public function login()
@@ -14,31 +16,44 @@ class AuthController
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
 
-        // 💡 データの存在チェック
-        if (!empty($data['user_id']) && !empty($data['password'])) {
-            
-            // 🚀【テスト用】DB接続エラーを回避するため、直に文字を比較します
-            if ($data['user_id'] === 'shimaenaga_user' && $data['password'] === 'hashed_password_123') {
-                echo json_encode([
-                    "success" => true,
-                    "message" => "ログイン成功（テスト照合）！"
-                ]);
+        // ① データベースの接続情報
+        $host     = 'localhost';
+        $dbname   = 'shimaenaga_app';
+        $username = 'root';
+        $password = 'Xrqd75uz917!';
+        $charset  = 'utf8mb4';
+
+    // 接続オプション（エラー時に例外を投げる、連想配列で結果を受け取るなど）
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+
+        $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+        try {
+            // ② MySQLへ接続
+            $pdo = new PDO($dsn, $username, $password, $options);
+
+            // ③ SQL文の準備と実行（usersテーブルからデータを全件取得）
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE user_id = :user_id');
+            $stmt->execute(['user_id' => $data['user_id']]);
+            $users = $stmt->fetch();
+            if ($users && $data['password'] === $users['password']) {
+                echo json_encode(["success" => true, "message" => "ログイン成功！"]);
                 exit;
-            } else {
-                echo json_encode([
-                    "success" => false,
-                    "message" => "ユーザーIDまたはパスワードが間違っています。"
-                ]);
+            }else{
+            // 接続エラーなどが起きた場合はここでキャッチする
+                echo json_encode(["success" => false, "message" => "IDまたはパスワードが違います。"]);
+                exit;
+                }
+        } catch (\PDOException $e) {
+                // 💡 データベース接続そのものが失敗したときのエラーハンドリング
+               echo json_encode(["success" => false, "message" => "データベースエラーが発生しました。"]);
                 exit;
             }
         }
-
-        // データが空で届いた場合
-        echo json_encode([
-            "success" => false,
-            "message" => "PHPのControllerまで届きましたが、データが空です。",
-            "received_data" => $data
-        ]);
-        exit;
     }
-}
+
+?>
+

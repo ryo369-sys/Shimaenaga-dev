@@ -18,8 +18,6 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
       <Router />
-      <Login />
-      <Home/>
       </BrowserRouter>
     </ThemeProvider>
   );
