@@ -8,7 +8,7 @@ Reaact php fastApi
 ページでリクエストの部分を作成
 modelのAPI疎通の確認のためログインできるか確認する
 php側でリポジトリで編集するか考える
-
+React,php,fastApiでインターファイスを実装する
 
 作る順番
 React(axios)
