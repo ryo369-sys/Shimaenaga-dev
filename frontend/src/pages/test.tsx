@@ -6,7 +6,6 @@ const Dashboard: React.FC = () => {
 
   const { userId } = useParams<{ userId: string }>();
 
-  console.log(userId)
   
   return (
     <div style={{ padding: '20px' }}>
