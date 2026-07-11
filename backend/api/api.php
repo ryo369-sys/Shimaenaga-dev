@@ -12,8 +12,8 @@ if ($uri === "/api/login" && $method === "POST") {
     $authController->login();
 }
 
-if ($uri === "/api/todos" && $method === "GET") {
-    $todoController->index();
+if ($uri === "/api/register" && $method === "POST") {
+    $authController->register();
 }
 
 if ($uri === "/api/todos" && $method === "POST") {

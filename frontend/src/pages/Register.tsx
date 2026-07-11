@@ -9,29 +9,53 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import { register } from "../services/auth";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export const User = memo(() => {
+export const Register = memo(() => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
+  const [age, setAge] = useState("");
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const cardStyle = {
     display: "block",
     transitionDuration: "0.3s",
-    height: "450px",
-    width: "400px",
+    height: "650px",
+    width: "600px",
     variant: "outlined",
   };
 
   
-const onClickRegister = async () => {
+const handleregister = async (e: React.FormEvent) => {
+    e.preventDefault();
+  try{
+    const response = await axios.post('http://localhost:8000/api/register',{
+        user_id: userId,
+        password: password,
+        email : email,
+        gender : gender,
+        age : age,
+    });
 
-    const response = await register(
-        userId,
-        password,
-    );
+    console.log(response.data.success)
 
-    console.log(response.data);
-};
+    if (response.data.success) {
+        setMessage('新規作成成功！');
+        // 🚀 成功したらダッシュボードページへジャンプ！
+        navigate('/dashboard/:age'); 
+      } else {
+        setMessage(response.data.message || '新規作成失敗');
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage('エラーが発生しました');
+    }
+  };
 
   return (
     <Box
@@ -43,7 +67,7 @@ const onClickRegister = async () => {
         }}
     >
       <Card style={cardStyle}>
-        <CardHeader title="todoList" />
+        <CardHeader title="Register" />
         <CardContent>
           <div>
             <TextField
@@ -64,6 +88,33 @@ const onClickRegister = async () => {
               margin="normal"
               onChange={(e) => setPassword(e.target.value)}
             />
+            <TextField
+              fullWidth
+              id="email"
+              type="email"
+              label="email"
+              placeholder="email"
+              margin="normal"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              fullWidth
+              id="gender"
+              type="gender"
+              label="gender"
+              placeholder="gender"
+              margin="normal"
+              onChange={(e) => setGender(e.target.value)}
+            /> 
+            <TextField
+              fullWidth
+              id="age"
+              type="age"
+              label="age"
+              placeholder="genageder"
+              margin="normal"
+              onChange={(e) => setAge(e.target.value)}
+            />                            
           </div>
         </CardContent>
         <CardActions>
@@ -71,7 +122,7 @@ const onClickRegister = async () => {
             variant="contained"
             size="large"
             color="secondary"
-            onClick={onClickRegister}
+            onClick={handleregister}
           >
             register
           </Button>
@@ -81,4 +132,4 @@ const onClickRegister = async () => {
   );
 });
 
-export default User;
+export default Register;
