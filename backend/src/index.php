@@ -1,5 +1,18 @@
 <?php
 
+// 1. すべてのリクエストに対してCORSの許可を出す
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+
+// 2. ブラウザからの事前テスト（OPTIONS）が来たら、ここで200番を返して即終了する
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+// --- ここから下に、もともと書いてあったrequireやルート分岐（if $request_uri === ...）を続けます ---
+
 require_once __DIR__ . '/../app/Controllers/AuthController.php';
 
 // 🚀【超重要】PHPの内部エラーを隠さずに、すべて画面に出力させる設定

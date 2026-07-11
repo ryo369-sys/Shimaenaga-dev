@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import Header from "../components/Header";
 import { Login } from "../pages/Login";
+import { Register } from "../pages/Register";
 import { FailedLogin } from "../pages/FailedLogin";
 import  Home  from "../pages/Home";
 import { Todo } from "../pages/todo";
@@ -26,6 +27,7 @@ export const Router = () => {
       <Route path="/home" element={<Home />} />
       <Route path="/todo" element={<Todo />} />
       <Route path="/bird" element={<Bird />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/fail_login" element={<FailedLogin />} />
       <Route path="/profile" element={<Profile />} />
     </Routes>

@@ -42,7 +42,7 @@ const handleLogin = async (e: React.FormEvent) => {
     if (response.data.success) {
         setMessage('ログイン成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate('/dashboard'); 
+        navigate('/dashboard/${user_id}'); 
       } else {
         setMessage(response.data.message || 'ログイン失敗');
       }
@@ -84,8 +84,6 @@ const handleLogin = async (e: React.FormEvent) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {/* 💡 画面にエラーや成功メッセージを出すために、ここに表示用タグを置いておくと便利です */}
-          {message && <p style={{ color: message.includes('成功') ? 'green' : 'red' }}>{message}</p>}
         </CardContent>
         <CardActions>
           <Button
