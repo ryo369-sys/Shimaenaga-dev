@@ -7,6 +7,7 @@ Reaact php fastApi
 やりたいこと
 ページでリクエストの部分を作成
 modelのAPI疎通の確認のためログインできるか確認する
+fastApiで簡単なレスポンスを返す
 php側でリポジトリで編集するか考える
 React,php,fastApiでインターファイスを実装する
 
@@ -15,7 +16,7 @@ React : npm run dev
 php : php -S localhost:8000
 fastApi : uvicorn main:app --reload
 
-作る順番
+順番
 React(axios)
 ↓
 php(file_get_contents()で行う)
