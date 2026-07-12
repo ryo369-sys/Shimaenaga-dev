@@ -31,8 +31,7 @@ export const Register = memo(() => {
   };
 
   
-const handleregister = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleregister = async () => {
   try{
     const response = await axios.post('http://localhost:8000/api/register',{
         user_id: userId,
@@ -42,12 +41,12 @@ const handleregister = async (e: React.FormEvent) => {
         age : age,
     });
 
-    console.log(response.data.success)
+    console.log("PHPからの生のお返事:", response.data);
 
     if (response.data.success) {
         setMessage('新規作成成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate('/dashboard/:age'); 
+        navigate('/Home/${age}'); 
       } else {
         setMessage(response.data.message || '新規作成失敗');
       }

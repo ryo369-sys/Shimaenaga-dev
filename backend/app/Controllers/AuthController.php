@@ -56,10 +56,10 @@ class AuthController
 
         public function register()
     {
-        // React（ポート5173）からのアクセスを許可
-        header("Access-Control-Allow-Origin: http://localhost:5173"); 
-        header("Access-Control-Allow-Headers: Content-Type");
-        header("Content-Type: application/json; charset=UTF-8");
+        // // React（ポート5173）からのアクセスを許可
+        // header("Access-Control-Allow-Origin: http://localhost:5173"); 
+        // header("Access-Control-Allow-Headers: Content-Type");
+        // header("Content-Type: application/json; charset=UTF-8");
 
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
@@ -84,8 +84,8 @@ class AuthController
             $pdo = new PDO($dsn, $username, $password, $options);
 
             // ③ SQL文の準備と実行（usersテーブルからデータを全件取得）
-            $sql = 'INSERT INTO users (user_id, password, email, gender, age, time) 
-                    VALUES (:user_id, :password, :email, :gender, :age, NOW())';
+            $sql = 'INSERT INTO users (user_id, password, email, gender, age) 
+                    VALUES (:user_id, :password, :email, :gender, :age)';
             $stmt = $pdo->prepare($sql);
             $params =   [
                     ':user_id' => $data['user_id'], 
