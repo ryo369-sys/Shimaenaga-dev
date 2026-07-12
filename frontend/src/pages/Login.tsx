@@ -37,7 +37,7 @@ const handleLogin = async (e: React.FormEvent) => {
         password: password
     });
 
-    console.log(response.data.success)
+    console.log(response.data.user_id)
 
     if (response.data.success) {
         setMessage('ログイン成功！');
