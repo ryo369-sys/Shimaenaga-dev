@@ -4,11 +4,11 @@ class AuthModel
 {
     public function getUserByUser($userId){
                 // ① データベースの接続情報
-        $host     = 'localhost';
-        $dbname   = 'shimaenaga_app';
-        $username = 'root';
-        $password = 'Xrqd75uz917!';
-        $charset  = 'utf8mb4';
+        $host     = $_ENV['DB_HOST'];
+        $dbname   = $_ENV['DB_NAME'];
+        $username = $_ENV['DB_USER'];
+        $password = $_ENV['DB_PASS'];
+        $charset  = $_ENV['DB_CHARSET'];
 
     // 接続オプション（エラー時に例外を投げる、連想配列で結果を受け取るなど）
     $options = [
@@ -34,11 +34,11 @@ class AuthModel
 
     public function CreateUser($date){
         // ① データベースの接続情報
-        $host     = 'localhost';
-        $dbname   = 'shimaenaga_app';
-        $username = 'root';
-        $password = 'Xrqd75uz917!';
-        $charset  = 'utf8mb4';
+        $host     = $_ENV['DB_HOST'];
+        $dbname   = $_ENV['DB_NAME'];
+        $username = $_ENV['DB_USER'];
+        $password = $_ENV['DB_PASS'];
+        $charset  = $_ENV['DB_CHARSET'];
 
     // 接続オプション（エラー時に例外を投げる、連想配列で結果を受け取るなど）
     $options = [
