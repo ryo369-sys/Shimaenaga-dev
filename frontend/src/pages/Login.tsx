@@ -7,6 +7,9 @@ import {
   CardHeader,
   TextField,
 } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import Typography from "@mui/material/Typography";
 import React from 'react';
 import { memo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +45,7 @@ const handleLogin = async (e: React.FormEvent) => {
     if (response.data.success) {
         setMessage('ログイン成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate('/dashboard/${user_id}'); 
+        navigate('/dashboard/${response.data.user_id}'); 
       } else {
         setMessage(response.data.message || 'ログイン失敗');
       }
@@ -52,15 +55,21 @@ const handleLogin = async (e: React.FormEvent) => {
     }
   };
 
+  const handleNavigateToRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+        navigate('/register'); 
+  };
+
   return (
     <Box
-        sx = {{
-          display : "flex",
-          alignItems : "center",
-          justifyContent : "center",
-          padding : 20
-        }}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20
+      }}
     >
+      {/* ⚠️ ここにあった新規作成ボタンを下に引っ越しさせました */}
       <Card style={cardStyle}>
         <CardHeader title="ログインページ" />
         <CardContent>
@@ -84,8 +93,12 @@ const handleLogin = async (e: React.FormEvent) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          {/* メッセージ表示用の領域（もし必要なら） */}
+          {message && <Typography color="error" sx={{ mt: 2 }}>{message}</Typography>}
         </CardContent>
-        <CardActions>
+
+        {/* 🚀 ボタンエリア：2つのボタンをここに並べます */}
+        <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
           <Button
             variant="contained"
             size="large"
@@ -93,6 +106,16 @@ const handleLogin = async (e: React.FormEvent) => {
             onClick={handleLogin}
           >
             Login
+          </Button>
+
+          {/* 🟢 新規作成ボタンをここに引っ越し！ */}
+          <Button
+            variant="outlined" // 横並びの時はデザインを変えて「outlined」にするとプロっぽくなります
+            size="large"
+            color="secondary"
+            onClick={handleNavigateToRegister}
+          >
+            新規作成
           </Button>
         </CardActions>
       </Card>
