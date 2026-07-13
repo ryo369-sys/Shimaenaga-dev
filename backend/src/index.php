@@ -7,6 +7,13 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
 header("Content-Type: application/json; charset=UTF-8");
 
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// 2. .envファイルを読み込む命令（backend直下の.envを探しに行きます）
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 // 2. 事前テスト（OPTIONS）は200を返して即終了
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
