@@ -41,12 +41,12 @@ const handleregister = async () => {
         age : age,
     });
 
-    console.log("PHPからの生のお返事:", response.data);
+    console.log("PHPからの生のお返事:", age);
 
     if (response.data.success) {
         setMessage('新規作成成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate('/Home/${age}'); 
+        navigate(`/Home/${age}`);
       } else {
         setMessage(response.data.message || '新規作成失敗');
       }

@@ -1,7 +1,7 @@
 <?php
-
+namespace App\Controllers;
 require_once "../app/Models/Auth.php";
-
+use App\Models\AuthModel;
 
 
 class AuthController
@@ -37,7 +37,7 @@ class AuthController
         $json = file_get_contents("php://input");
         $data = json_decode($json, true);
 
-        $authModel = new Auth();
+        $authModel = new AuthModel();
         
             $success = $authModel->createUser($data);
             if ($success) {

@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Models;
+
+use PDO;
+
 class AuthModel
 {
     public function getUserByUser($userId){
@@ -26,13 +30,13 @@ class AuthModel
             $stmt->execute(['user_id' => $userId]);
             $users = $stmt->fetch();
             return $users;
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             // 💡 データベース接続そのものが失敗したときのエラーハンドリング
            return false;
         }
     }
 
-    public function CreateUser($date){
+    public function CreateUser($data){
         // ① データベースの接続情報
         $host     = $_ENV['DB_HOST'];
         $dbname   = $_ENV['DB_NAME'];
@@ -64,8 +68,9 @@ class AuthModel
                     ':age' => $data['age'],
             ];
         return $stmt->execute($params); // 成功したら true, 失敗したら false を返す
-        } catch (\PDOException $e) {
-            return false;
+        } catch (PDOException $e) {
+            echo json_encode(["success" => false, "message" => "DBエラー: " . $e->getMessage()]);
+            exit;
         }
     }
 }
