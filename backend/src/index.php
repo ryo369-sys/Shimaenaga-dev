@@ -27,6 +27,7 @@ error_reporting(E_ALL);
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
+$authController = new App\Controllers\AuthController();
 
 // ==========================================
 // 🔒 ログインのルート
@@ -44,7 +45,6 @@ if (str_ends_with($uri, "/api/login")) {
 // ==========================================
 if (str_ends_with($uri, "/api/register")) {
     if ($method === "POST") {
-        $authController = new AuthController();
         $authController->register();
         exit; 
     }
