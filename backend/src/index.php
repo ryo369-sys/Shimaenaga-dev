@@ -21,13 +21,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../app/Controllers/AuthController.php';
+require_once __DIR__ . '/../app/Controllers/BirdController.php';
+
+use App\Controllers\AuthController;
+use App\Controllers\BirdController;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
-$authController = new App\Controllers\AuthController();
+$authController = new AuthController();
+$birdController = new BirdController();
 
 // ==========================================
 // 🔒 ログインのルート
@@ -45,10 +50,23 @@ if (str_ends_with($uri, "/api/login")) {
 // ==========================================
 if (str_ends_with($uri, "/api/register")) {
     if ($method === "POST") {
+        $authController = new AuthController();
         $authController->register();
         exit; 
     }
 }
+
+// ==========================================
+// 🚀 ReactへのfastApi結果疎通（完全に外側に独立！）
+// ==========================================
+if (str_ends_with($uri, "/api/fastApi")) {
+    if ($method === "GET") {
+        $birdController = new BirdController();
+        $birdController->getFastApiData();
+        exit; 
+    }
+}
+
 
 // ==========================================
 // ⚠️ どのURLにも当てはまらなかった場合
