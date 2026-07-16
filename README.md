@@ -8,6 +8,7 @@ Reaact php fastApi
 php側でリポジトリで編集するか考える
 ※必要ないなら別のリポジトリで練習する
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
+RezNetで学習させる
 
 実行方法
 React : npm run dev 
