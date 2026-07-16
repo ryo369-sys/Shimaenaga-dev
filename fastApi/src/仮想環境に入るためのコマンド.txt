@@ -1,0 +1,5 @@
+仮想環境に入る方法
+.\venv\Scripts\Activate.ps1
+
+# 仮想環境から抜ける
+deactivate
