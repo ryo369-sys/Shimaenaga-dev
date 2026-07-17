@@ -19,7 +19,9 @@ import { useNavigate } from 'react-router-dom';
 export const FastApi = memo(() => {
     const [success, setSuccess] = useState([]);
     const [data, setData] = useState(true);
-  const [message, setMessage] = useState("");
+    const [name, setName] = useState(true);
+    const [accuracy, setAccuracy] = useState(true);
+    const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -38,7 +40,10 @@ const handlefastApi = async () => {
         // Axiosを使用してデータを取得
         const response = await axios.get( 'http://localhost:8000/api/fastApi')
         
-        console.log(response.data);
+        console.log(response.data.name);
+        console.log(response.data.accuracy);
+        setData(response.data.name);
+        setName(response.data.accuracy);
         setSuccess(response.data);
           setMessage("データの取得に成功しました！");
         } catch (error) {
@@ -62,7 +67,7 @@ return (
           <Typography variant="body1" sx={{ mb: 2 }}>
             ボタンを押して、PHP経由でFastAPIから正答率を取得します。
           </Typography>
-          
+        
           {message && (
             <Typography color="secondary" sx={{ mt: 2, mb: 2 }}>
               {message}
@@ -70,9 +75,14 @@ return (
           )}
 
           {/* 取得したデータを画面に表示してみる */}
-          {success && (
+          {name && (
             <pre style={{ background: "#f5f5f5", padding: "10px", borderRadius: "4px" }}>
-              {JSON.stringify(success, null, 2)}
+              {JSON.stringify(name, null, 2)}
+            </pre>
+          )}
+           {accuracy && (
+            <pre style={{ background: "#f5f5f5", padding: "10px", borderRadius: "4px" }}>
+              {JSON.stringify(accuracy, null, 2)}
             </pre>
           )}
         </CardContent>

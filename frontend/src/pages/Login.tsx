@@ -48,6 +48,7 @@ const handleLogin = async (e: React.FormEvent) => {
         navigate('/dashboard/${response.data.user_id}'); 
       } else {
         setMessage(response.data.message || 'ログイン失敗');
+        navigate('/fail_login'); 
       }
     } catch (error) {
       console.error(error);

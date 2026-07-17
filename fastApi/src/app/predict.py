@@ -15,7 +15,8 @@ def judgeShimaenaga(image_path):
     model.fc = nn.Linear(num_ftrs, len(class_names))
 
     # 💡 解決策①：モデルの重みのパスを絶対パスにする
-    model_weight_path = r'C:\Users\anicc\AppData\Local\Shimaenaga\fastApi\src\app\my_resnet_model.pth'
+    model_weight_path = r'C:/Users/anicc/AppData/Local/Shimaenaga/fastApi/src/app/my_resnet_model.pth'
+    image_path = 'C:/Users/anicc/AppData/Local/Shimaenaga/fastApi/src/app/dataset/val/plush/val_plush_shimaenaga (3).JPG'
     model.load_state_dict(torch.load(model_weight_path, map_location=device))
     model = model.to(device)
     model.eval()
@@ -49,4 +50,4 @@ def judgeShimaenaga(image_path):
     print(f"判定結果：この画像は「{predicted_class}」です！")
     
     # 💡 float型を正しくフォーマットして返す
-    return str(predicted_class), f"{result_percentage:.2f}%"
+    return str(predicted_class), str(f"{result_percentage:.2f}%")

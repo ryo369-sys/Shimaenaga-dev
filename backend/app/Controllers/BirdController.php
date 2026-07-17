@@ -19,6 +19,12 @@ class BirdController
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+        $output = [
+            "success" => false,
+            "message" => "",
+            "name"    => null,
+            "accuracy" => time() // 例：共通で入れたいデータなど
+        ];
         // ReactにJSONとして返すための準備（CORS許可も追加しておきます）
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: Content-Type");
@@ -35,7 +41,9 @@ class BirdController
             
             echo json_encode([
                 "success" => true,
-                "data" => $data
+                "data" => $data,
+                "name" => "response",
+                "accuracy" => "ass",
             ]);
             exit;
         } else {
