@@ -1,6 +1,6 @@
 <?php
 
-class Bird
+class BirdModel
 {
     public function all()
     {

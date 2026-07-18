@@ -23,8 +23,8 @@ if ($uri === "/api/fastApi" && $method === "GET") {
 }
 
 
-if ($uri === "/api/todos" && $method === "POST") {
-    $todoController->store();
+if ($uri === "/api/GetAccuracy" && $method === "POST") {
+    $imageController->GetAccuracy();
 }
 
 if ($uri === "/api/images" && $method === "POST") {
