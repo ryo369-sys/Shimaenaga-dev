@@ -8,7 +8,7 @@ Reaact php fastApi
 php側でリポジトリで編集するか考える
 ※必要ないなら別のリポジトリで練習する
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
-post関数にして画像をインプットできるようにする
+Controllerに代入する引数を代入する
 
 実行方法
 React : npm run dev 
