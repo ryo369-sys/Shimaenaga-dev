@@ -8,7 +8,8 @@ Reaact php fastApi
 php側でリポジトリで編集するか考える
 ※必要ないなら別のリポジトリで練習する
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
-Controllerに代入する引数を代入する
+Controllerに代入する引数を代入する→api.phpに代入？
+
 
 実行方法
 React : npm run dev 
