@@ -37,8 +37,6 @@ React(`response.data` / `response.json()`)
 2. **データ拡張（Data Augmentation）:**
    データ不均衡を解消するため、PyTorch（torchvision.transforms）を用いて、リアルなぬいぐるみ画像に対して「左右反転」「微小な回転（±10度）」のデータ拡張を施し、30枚にアップサンプリングしました。
 
-
-
 -------------------
 メールアドレス
 □□□□□□
