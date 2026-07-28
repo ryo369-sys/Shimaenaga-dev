@@ -5,3 +5,8 @@ from pydantic import BaseModel
 class ShimaenagaAccuracy(BaseModel):
         names = "test",
         accuracy="92.0",
+
+
+
+
+
