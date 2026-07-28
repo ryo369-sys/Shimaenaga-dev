@@ -3,6 +3,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.predict import judgeShimaenaga
+import io
+from PIL import Image
 
 # 🌟 このファイル専用のルーターを作る
 router = APIRouter(
@@ -10,19 +12,33 @@ router = APIRouter(
     tags=["Accuracy"]
 )
 
-# 🚀 データの形を定義
-class ShimaenagaAccuracy(BaseModel):
-    names: str
-    accuracy: str
+# -------------------------------------------------------------
+# ① 既存：ユーザーの過去データやステータスを取得するGETエンドポイント
+# -------------------------------------------------------------
+@router.get("/{user_id}")
+def get_user_accuracy(user_id: str):
+    # ユーザーの過去の判定結果などを返す処理
+    return {
+        "success": True,
+        "message": f"User: {user_id} の過去データを取得しました",
+        "user_id": user_id
+    }
 
-# 🟢 エンドポイント（@router に変更！）
-# PHPからは `/accuracy/user123` でアクセスできます
-@router.get("/{user_id}", response_model=ShimaenagaAccuracy)
-def get_accuracy(user_id: str):
-    img = 'C:/Users/anicc/AppData/Local/Shimaenaga/fastApi/src/app/dataset/val/plush/val_plush_shimaenaga (3).JPG'
-    names, accuracy = judgeShimaenaga(img)
+# -------------------------------------------------------------
+# ② 新規：画像を受け取ってシマエナガ判定を行うPOSTエンドポイント
+# -------------------------------------------------------------
+@router.post("/judge")
+async def judge_shimaenaga_image(file: UploadFile = File(...)):
+    # 届いた画像ファイルを読み込む
+    contents = await file.read()
+    image = Image.open(io.BytesIO(contents))
+    
+    # 判定を実行
+    names, accuracy = judgeShimaenaga(image)
     
     return {
+        "success": True,
+        "message": "画像の判定が完了しました",
         "names": names,
         "accuracy": accuracy
     }
