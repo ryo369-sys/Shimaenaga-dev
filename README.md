@@ -1,4 +1,4 @@
-フロント：React バックエンド：php(MVC) 画像解析:fastApiもといPython
+フロント：React バックエンド：php(MVC) 画像解析:fastApi
 
 本物のシマエナガとぬいぐるみのシマエナガの分別
 
