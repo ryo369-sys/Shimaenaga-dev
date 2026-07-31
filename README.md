@@ -9,11 +9,13 @@ fastApiからphpにjsonを送る
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
 Controllerに代入する引数を代入する→api.phpに代入させるようにする
 
-
+-------------------
 [実行方法]
 React : npm run dev 
 php : php -S localhost:8000 ※index.phpのあるフォルダで行う
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
+-------------------
+
 
 順番
 React(axios)
