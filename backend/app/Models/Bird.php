@@ -2,17 +2,7 @@
 
 class BirdModel
 {
-    public function all()
+    public function judgeImage()
     {
-        return [
-            [
-                "id" => 1,
-                "title" => "シマエナガを探す"
-            ],
-            [
-                "id" => 2,
-                "title" => "React勉強"
-            ]
-        ];
-    }
+    } 
 }
