@@ -18,7 +18,7 @@ import { FC } from 'react'
 import { login } from "../services/auth";
 
 export const Login : FC =() => {
-  const [userId, setUserId] = useState("");
+  const [user_id, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
@@ -36,7 +36,7 @@ const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
   try{
     const response = await axios.post('http://localhost:8000/api/login',{
-        user_id: userId,
+        user_id: user_id,
         password: password
     });
 

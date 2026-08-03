@@ -5,25 +5,17 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  TextField,
+  Typography,
 } from "@mui/material";
 import { memo, useState } from "react";
-import { register } from "../services/auth";
 import axios from 'axios';
-import Toolbar from "@mui/material/Toolbar";
-import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-import React, {  useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+
 
 export const FastApi = memo(() => {
-    const [success, setSuccess] = useState([]);
-    const [data, setData] = useState(true);
-    const [name, setName] = useState(true);
-    const [accuracy, setAccuracy] = useState(true);
-    const [message, setMessage] = useState("");
-
-  const navigate = useNavigate();
+  const [userId, setUserId] = useState("test_user"); // テスト用に初期値をセット
+  const [resultData, setResultData] = useState(null); // レスポンス全体を保持
+  const [message, setMessage] = useState("");
 
   const cardStyle = {
     display: "block",
@@ -33,26 +25,28 @@ export const FastApi = memo(() => {
     variant: "outlined",
   };
 
-  
-const handlefastApi = async () => {
-    try{
-        console.log("PHPへリクエストを送信します...");
-        // Axiosを使用してデータを取得
-        const response = await axios.get( 'http://localhost:8000/api/fastApi')
-        
-        console.log(response.data.name);
-        console.log(response.data.accuracy);
-        setData(response.data.name);
-        setName(response.data.accuracy);
-        setSuccess(response.data);
-          setMessage("データの取得に成功しました！");
-        } catch (error) {
-          console.error('エラーが発生しました:', error);
-          setMessage("データの取得に失敗しました。");
-        }
-    }
+  const handlefastApi = async () => {
+    try {
+      console.log("PHPへリクエストを送信します...");
+      
+      // AxiosでPHPへPOST送信
+      const response = await axios.post('http://localhost:8000/api/fastApi', {
+        user_id: userId
+      });
+      
+      console.log("PHPからのレスポンス:", response.data);
 
-return (
+      // レスポンスデータをセット
+      setResultData(response.data);
+      setMessage(response.data.message || "データの取得に成功しました！");
+
+    } catch (error) {
+      console.error('エラーが発生しました:', error);
+      setMessage("データの取得に失敗しました。");
+    }
+  };
+
+  return (
     <Box
       sx={{
         display: "flex",
@@ -74,15 +68,10 @@ return (
             </Typography>
           )}
 
-          {/* 取得したデータを画面に表示してみる */}
-          {name && (
-            <pre style={{ background: "#f5f5f5", padding: "10px", borderRadius: "4px" }}>
-              {JSON.stringify(name, null, 2)}
-            </pre>
-          )}
-           {accuracy && (
-            <pre style={{ background: "#f5f5f5", padding: "10px", borderRadius: "4px" }}>
-              {JSON.stringify(accuracy, null, 2)}
+          {/* 💡 データが取得できた時だけ綺麗にJSON表示する */}
+          {resultData && (
+            <pre style={{ background: "#f5f5f5", padding: "10px", borderRadius: "4px", overflowX: "auto" }}>
+              {JSON.stringify(resultData, null, 2)}
             </pre>
           )}
         </CardContent>

@@ -22,9 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/../app/Controllers/AuthController.php';
 require_once __DIR__ . '/../app/Controllers/BirdController.php';
+require_once __DIR__ . '/../app/Controllers/ImageController.php';
 
 use App\Controllers\AuthController;
 use App\Controllers\BirdController;
+use App\Controllers\ImageController;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -57,15 +59,17 @@ if (str_ends_with($uri, "/api/register")) {
 }
 
 // ==========================================
-// 🚀 ReactへのfastApi結果疎通（完全に外側に独立！）
+// 🚀 Reactへのシマエナガの結果送信（完全に外側に独立！）
 // ==========================================
-if (str_ends_with($uri, "/api/fastApi")) {
-    if ($method === "GET") {
-        $birdController = new BirdController();
-        $birdController->getFastApiData();
+if (str_ends_with($uri, "/api/GetAccuracy")) {
+    if ($method === "POST") {
+        $birdController = new ImageController();
+        $birdController->GetAccuracy();
         exit; 
     }
 }
+
+
 
 
 // ==========================================

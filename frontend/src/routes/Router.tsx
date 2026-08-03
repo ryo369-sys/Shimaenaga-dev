@@ -9,6 +9,7 @@ import  Dashboard  from "../pages/test";
 import  Profile  from "../pages/Profile";
 import  Bird  from "../pages/Bird";
 import  FastApi  from "../pages/fastApi";
+import  GetAccuracy  from "../pages/getaccuracy";
 
 export const Router = () => {
   return (
@@ -31,6 +32,7 @@ export const Router = () => {
       <Route path="/fail_login" element={<FailedLogin />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/FastApi" element={<FastApi />} />
+      <Route path="/GetAccuracy" element={<GetAccuracy  />} />
     </Routes>
   );
 };

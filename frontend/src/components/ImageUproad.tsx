@@ -55,7 +55,7 @@ export const ImageUproad = ({
 
   return (
     <button onClick={handleImageUproad} >
-      FFT解析開始
+      シマエナガ分別開始
     </button>
   )
 }
