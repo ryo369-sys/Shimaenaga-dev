@@ -9,14 +9,29 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import axios from 'axios';
+import ImageModalGallery from "../components/Dialog"
 
 
 export const GetAccuracy = () => {
 
   const [file, setFile] = useState<File | null>(null);
-  //const [userId, setUserId] = useState("test_user"); // テスト用に初期値をセット
+  // 💡 モーダルの開閉状態を管理
+  const [modalOpen, setModalOpen] = useState(false);
   const [resultData, setResultData] = useState(null); // レスポンス全体を保持
+  //モーダルの表示したい画像のURLを保持
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+
+  // 画像サムネイルをクリックした時の処理
+  const handleImageClick = () => {
+    //setSelectedImage(url);
+    setModalOpen(true); // モーダルを開く！
+  };
+
+  // モーダルを閉じる時の処理
+  const handleCloseModal = () => {
+    setModalOpen(false); // モーダルを閉じる！
+  };
 
   const cardStyle = {
     display: "block",
@@ -37,6 +52,10 @@ export const GetAccuracy = () => {
       
       setFile(selectedFile);
       setMessage(`選択中: ${selectedFile.name}`);
+
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setSelectedImage(imageUrl);
+      setModalOpen(true);
     }
   };
 
@@ -77,6 +96,9 @@ export const GetAccuracy = () => {
       setResultData(data);
       setMessage(data.message || "データの取得に成功しました！");
 
+      // 💡 プレビュー用に画像のURLをセットしてモーダルを開く！
+      setSelectedImage(URL.createObjectURL(file));
+      setModalOpen(true);
     } catch (error) {
       console.error('エラーが発生しました:', error);
       setMessage("データの取得に失敗しました。");
@@ -134,6 +156,11 @@ export const GetAccuracy = () => {
           </Button>
         </CardActions>
       </Card>
+      <ImageModalGallery
+        open={modalOpen}
+        onClose={handleCloseModal}
+        imageUrl={selectedImage}
+      />
     </Box>
   );
 };
