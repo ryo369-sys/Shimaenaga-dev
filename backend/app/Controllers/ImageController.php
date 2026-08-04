@@ -23,7 +23,7 @@ class ImageController
         $fileName = $_FILES['image']['name'];
         $mimeType = $_FILES['image']['type'];
 
-        $fastApiUrl = "http://127.0.0.1:8080/accuracy/judge";
+        $fastApiUrl = "http://127.0.0.1:8000/accuracy/judge";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $fastApiUrl);
