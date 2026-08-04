@@ -7,12 +7,11 @@
 php側でリポジトリで編集するか考える
 ※必要ないなら別のリポジトリで練習する
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
--------------------
+
 [実行方法]
 React : npm run dev 
 php : php -S localhost:8000 ※index.phpのあるフォルダで行う
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
--------------------
 
 
 順番
