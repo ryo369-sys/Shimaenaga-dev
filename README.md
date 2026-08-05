@@ -2,7 +2,7 @@
 
 本物のシマエナガとぬいぐるみのシマエナガの分別
 
-行いたい機能
+[行いたい機能]
 -------------------
 ユーザー登録・ログイン
 投稿
@@ -45,20 +45,31 @@ React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナ
 
 [実行方法]
 React : npm run dev 
+
 php : php -S localhost:8000 ※index.phpのあるフォルダで行う
+
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
 
 
 順番
 React(axios)
+
 ↓
+
 php(file_get_contents()で行う)
+
 ↓
+
 fastApi(Resnet　レスポンスにreturn {})
+
 ↓
+
 php(echo json_encode()で行う)
+
 ↓
+
 React(`response.data` / `response.json()`)
+
 
 ## データセットについて
 
