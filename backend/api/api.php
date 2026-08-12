@@ -40,6 +40,10 @@ if ($uri === "/api/GetAccuracy" && $method === "POST") {
     $imageController->GetAccuracy($Image);
 }
 
+if ($uri === "/api/timeline" && $method === "get") {
+    $todoController->Timeline_show();
+}
+
 if ($uri === "/api/images" && $method === "POST") {
     $imageController->upload();
 }

@@ -7,7 +7,6 @@ import  Home  from "../pages/Home";
 import { Todo } from "../pages/todo";
 import  Dashboard  from "../pages/test";
 import  Profile  from "../pages/Profile";
-import  Bird  from "../pages/Bird";
 import  GetAccuracy  from "../pages/getaccuracy";
 
 export const Router = () => {
@@ -24,9 +23,8 @@ export const Router = () => {
       />
       
       <Route path="/dashboard/:useId" element={<Dashboard />} />
-      <Route path="/home/:age" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/todo" element={<Todo />} />
-      <Route path="/bird" element={<Bird />} />
       <Route path="/register" element={<Register />} />
       <Route path="/fail_login" element={<FailedLogin />} />
       <Route path="/profile" element={<Profile />} />
