@@ -23,10 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once __DIR__ . '/../app/Controllers/AuthController.php';
 require_once __DIR__ . '/../app/Controllers/BirdController.php';
 require_once __DIR__ . '/../app/Controllers/ImageController.php';
+require_once __DIR__ . '/../app/Controllers/TodoController.php';
 
 use App\Controllers\AuthController;
 use App\Controllers\BirdController;
 use App\Controllers\ImageController;
+use App\Controllers\TodoController;
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
@@ -35,6 +37,7 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 $authController = new AuthController();
 $birdController = new BirdController();
+$todoController = new TodoController();
 
 // ==========================================
 // 🔒 ログインのルート
@@ -69,7 +72,16 @@ if (str_ends_with($uri, "/api/GetAccuracy")) {
     }
 }
 
-
+// ==========================================
+// 🚀 タイムラインの表示
+// ==========================================
+if (str_ends_with($uri,  "/api/timeline")) {
+    if ($method === "GET") {
+        $todoController = new TodoController();
+        $todoController->Timeline_show();
+        exit; 
+    }
+}
 
 
 // ==========================================
