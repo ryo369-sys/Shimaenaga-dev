@@ -3,3 +3,7 @@
 
 # Composerでインストールした外部ライブラリのフォルダを外す
 vendor/
+
+
+public/images/
+*.jpg

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import axios from 'axios';
-import ImageModalGallery from "../components/Dialog"
+
 
 
 export const GetAccuracy = () => {
@@ -156,11 +156,6 @@ export const GetAccuracy = () => {
           </Button>
         </CardActions>
       </Card>
-      <ImageModalGallery
-        open={modalOpen}
-        onClose={handleCloseModal}
-        imageUrl={selectedImage}
-      />
     </Box>
   );
 };

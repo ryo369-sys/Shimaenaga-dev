@@ -1,8 +1,19 @@
-import { memo } from "react";
+// Dashboard.tsx
+import React from 'react';
+import { useParams } from 'react-router-dom';
 
+const Profile: React.FC = () => {
 
-function Profile() {
-    return <p>遷移です。</p>;
-    };
+  const { userId } = useParams<{ userId: string }>();
+
+  
+  return (
+    <div style={{ padding: '20px' }}>
+      <h2>ダッシュボード</h2>
+      <p>ログインに成功した人だけが見られる秘密のページです！</p>
+      <p>ようこそ、 <strong>{userId}</strong> さん！</p>
+    </div>
+  );
+};
 
 export default Profile;
