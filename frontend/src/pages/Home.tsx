@@ -1,24 +1,19 @@
-import {Button,} from "@mui/material";
-import { FC } from 'react'
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import type { Post } from '../types/Post';
+import { FC, useState } from 'react';
+import { Button } from "@mui/material";
 import axios from 'axios';
-import { UserLink } from '../components/UserLink'
+import type { Post } from '../types/Post';
+import { UserLink } from '../components/UserLink';
+import { GrayBox } from '../components/GrayBox'; // ★ 追加: グレーの枠コンポーネント
 
-export const Timeline : FC =() => {
+export const Timeline: FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  //const navigate = useNavigate();
 
-  // 1. async を追加して非同期関数にする
+  // 1. APIからタイムラインデータを取得する
   const handleFileChange = async () => {
     try {
-      // 2. await をつけてデータが返ってくるのを待つ
       const response = await axios.get<Post[]>('http://localhost:8000/api/timeline');
-      // 3. データ本体は response.data で取得する
       console.log(response.data);
-      // 【安全対策①】配列の時だけ state を更新する
+
       if (Array.isArray(response.data)) {
         setPosts(response.data);
       } else {
@@ -29,10 +24,16 @@ export const Timeline : FC =() => {
     }
   };
 
+  // ★ 2. 子(GrayBox)で枠が押された時に「発火」して動く親の処理
+  const handlePostClick = (clickedId: number) => {
+    console.log(`投稿ID: ${clickedId} の枠がクリックされました！`);
+    // ここに将来「詳細画面へ遷移」などの処理を書きます
+    alert(`投稿ID: ${clickedId} の枠が押されました`);
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>ダッシュボード</h2>
+    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+      <h2>タイムライン</h2>
       <Button
         variant="contained"
         size="large"
@@ -42,17 +43,30 @@ export const Timeline : FC =() => {
         テスト投稿
       </Button>
 
-      {/* ③ データが入るとここに描画される */}
+      {/* 投稿一覧エリア */}
       <div style={{ marginTop: '20px' }}>
         {posts.map((post) => (
-          <div key={post.id} >
-            <UserLink userId={post.id} userName={post.userName} />
-            <p>{post.content}</p>
-          </div>
+          /* ★ 元の <div> を GrayBox コンポーネントに差し替え！ */
+          <GrayBox 
+            key={post.id} 
+            postId={post.id} 
+            onBoxClick={handlePostClick} // 親の関数を渡す
+          >
+            {/* 
+               --- ここから下が children (中身) --- 
+               ユーザーネームと本文を GrayBox に流し込む
+            */}
+            <div style={{ marginBottom: '8px' }}>
+              <UserLink userId={post.id} userName={post.userName} />
+            </div>
+            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
+              {post.content}
+            </p>
+          </GrayBox>
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default Timeline;
