@@ -7,17 +7,14 @@ import {
   CardHeader,
   TextField,
 } from "@mui/material";
-import Toolbar from "@mui/material/Toolbar";
-import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
-import React from 'react';
-import { memo, useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { FC } from 'react'
-import { login } from "../services/auth";
+import { FC } from 'react';
+import { isAxiosError } from 'axios';
+import api from '../axios'; // ★1. 作成した共通Axiosインスタンスをインポート
 
-export const Login : FC =() => {
+export const Login: FC = () => {
   const [user_id, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -31,34 +28,40 @@ export const Login : FC =() => {
     width: "400px",
     variant: "outlined",
   };
-  
-const handleLogin = async (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-  try{
-    const response = await axios.post('http://localhost:8000/api/login',{
+    setMessage("");
+
+    try {
+      // ★1. 共通の api を使って短く記述
+      const response = await api.post('/login', {
         user_id: user_id,
         password: password
-    });
+      });
 
-    console.log(response.data.user_id)
-
-    if (response.data.success) {
+      if (response.data.success) {
         setMessage('ログイン成功！');
-        // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate('/dashboard/${response.data.user_id}'); 
-      } else {
-        setMessage(response.data.message || 'ログイン失敗');
-        navigate('/fail_login'); 
+
+        // ★2 & ★3. 階層を response.data.user.user_id に修正し、バックティック `` に変更
+        const targetUserId = response.data.user.user_id;
+        navigate(`/dashboard/${targetUserId}`); 
       }
     } catch (error) {
       console.error(error);
-      setMessage('エラーが発生しました');
+
+      // ★4. Laravelから 401 や 422 が返ってきた場合（catch側で処理）
+      if (isAxiosError(error) && error.response) {
+        setMessage(error.response.data.message || 'ユーザーIDまたはパスワードが違います');
+      } else {
+        setMessage('サーバー通信エラーが発生しました');
+      }
     }
   };
 
-  const handleNavigateToRegister = async (e: React.FormEvent) => {
+  const handleNavigateToRegister = (e: React.FormEvent) => {
     e.preventDefault();
-        navigate('/register'); 
+    navigate('/register'); 
   };
 
   return (
@@ -70,7 +73,6 @@ const handleLogin = async (e: React.FormEvent) => {
         padding: 20
       }}
     >
-      {/* ⚠️ ここにあった新規作成ボタンを下に引っ越しさせました */}
       <Card style={cardStyle}>
         <CardHeader title="ログインページ" />
         <CardContent>
@@ -78,7 +80,7 @@ const handleLogin = async (e: React.FormEvent) => {
             <TextField
               fullWidth
               id="username"
-              type="email"
+              type="text"
               label="Username"
               placeholder="Username"
               margin="normal"
@@ -94,11 +96,9 @@ const handleLogin = async (e: React.FormEvent) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {/* メッセージ表示用の領域（もし必要なら） */}
           {message && <Typography color="error" sx={{ mt: 2 }}>{message}</Typography>}
         </CardContent>
 
-        {/* 🚀 ボタンエリア：2つのボタンをここに並べます */}
         <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
           <Button
             variant="contained"
@@ -109,9 +109,8 @@ const handleLogin = async (e: React.FormEvent) => {
             Login
           </Button>
 
-          {/* 🟢 新規作成ボタンをここに引っ越し！ */}
           <Button
-            variant="outlined" // 横並びの時はデザインを変えて「outlined」にするとプロっぽくなります
+            variant="outlined"
             size="large"
             color="secondary"
             onClick={handleNavigateToRegister}
