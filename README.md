@@ -69,7 +69,7 @@ React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナ
 [実行方法]
 React : npm run dev 
 
-php : php -S localhost:8000 ※index.phpのあるフォルダで行う
+php : php artisan serve ※backend-laravelファイルの直下で行う
 
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
 
