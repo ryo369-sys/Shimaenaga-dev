@@ -63,7 +63,6 @@ AI判定への投票
 今日やりたいこと
 -------------------
 php側でリポジトリで編集するか考える
-※必要ないなら別のリポジトリで練習する
 React,php,fastApiでリアルのシマエナガとぬいぐるみのシマエナガのリクエストとレスポンス用のインターファイスを実装する
 
 [実行方法]
@@ -72,27 +71,6 @@ React : npm run dev
 php : php artisan serve ※backend-laravelファイルの直下で行う
 
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
-
-
-順番
-React(axios)
-
-↓
-
-php(file_get_contents()で行う)
-
-↓
-
-fastApi(Resnet　レスポンスにreturn {})
-
-↓
-
-php(echo json_encode()で行う)
-
-↓
-
-React(`response.data` / `response.json()`)
-
 
 ## データセットについて
 
