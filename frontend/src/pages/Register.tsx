@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { memo, useState } from "react";
 import { register } from "../services/auth";
-import axios from 'axios';
+import api from '../axios';
 import { useNavigate } from 'react-router-dom';
 
 export const Register = memo(() => {
   const [userId, setUserId] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
@@ -33,20 +34,21 @@ export const Register = memo(() => {
   
 const handleregister = async () => {
   try{
-    const response = await axios.post('http://localhost:8000/api/register',{
+    const response = await api.post('/register',{
         user_id: userId,
+        username: username,
         password: password,
         email : email,
         gender : gender,
         age : age,
     });
 
-    console.log("PHPからの生のお返事:", age);
+    console.log("PHPからの生のお返事:", userId);
 
     if (response.data.success) {
         setMessage('新規作成成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate(`/Home/${age}`);
+        navigate(`/Home/${userId}`);
       } else {
         setMessage(response.data.message || '新規作成失敗');
       }
@@ -76,7 +78,7 @@ const handleregister = async () => {
               label="Username"
               placeholder="Username"
               margin="normal"
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               fullWidth
