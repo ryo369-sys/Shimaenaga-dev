@@ -70,7 +70,17 @@ React : npm run dev
 
 php : php artisan serve ※backend-laravelファイルの直下で行う
 
+Laravelでのファイル作成
+modelの場合
+php artisan make:model Post
+※modelは頭文字が大文字なのが通例、DB名はpostsの場合このような名前になる
+
+controllerの場合
+php artisan make:controller PostController
+※controllerも頭文字が大文字なのが通例
+
 fastApi : uvicorn main:app --reload　※main.pyのところで行う
+
 
 ## データセットについて
 
