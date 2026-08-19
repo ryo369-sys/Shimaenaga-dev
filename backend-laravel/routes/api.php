@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\TodoController;
 
 Route::get('/user', function (Request $request) {
@@ -10,6 +10,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::post('/login',[AuthController::class, 'login']) ;
+Route::post('/login',[UserController::class, 'login']) ;
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [UserController::class, 'register']);
+
+Route::get('/timeline', [PostController::class, 'Timeline_get']);

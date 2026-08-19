@@ -2,31 +2,33 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    public $timestamps = false;
+    // updated_at のみ無効化したい場合
+    const UPDATED_AT = null;
+    // テーブル名が 'users' 以外（例: 'user_tbl'）の場合は指定
+    // protected $table = 'users';
+
+    // 一括保存・更新を許可するカラム（安全対策）
+    protected $fillable = [
+        'user_id',
+        'username',
+        'password',
+        'email',
+        'gender',
+        'age',
+    ];
+
+    // JSON変換時に非表示にするカラム（パスワードなどを隠す）
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }
