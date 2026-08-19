@@ -13,7 +13,7 @@ import api from '../axios';
 import { useNavigate } from 'react-router-dom';
 
 export const Register = memo(() => {
-  const [userId, setUserId] = useState("");
+  const [user_id, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -35,20 +35,21 @@ export const Register = memo(() => {
 const handleregister = async () => {
   try{
     const response = await api.post('/register',{
-        user_id: userId,
+        user_id: user_id,
         username: username,
         password: password,
         email : email,
         gender : gender,
-        age : age,
+        age : Number(age),
     });
 
-    console.log("PHPからの生のお返事:", userId);
+    console.log("PHPからの生のお返事:", user_id);
 
     if (response.data.success) {
         setMessage('新規作成成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
-        navigate(`/Home/${userId}`);
+        const id = response.data.user.id;
+        navigate(`/Home/${id}`);
       } else {
         setMessage(response.data.message || '新規作成失敗');
       }
@@ -71,6 +72,16 @@ const handleregister = async () => {
         <CardHeader title="Register" />
         <CardContent>
           <div>
+            <TextField
+              fullWidth
+              id="user_id"
+              type="text"
+              label="User ID"
+              placeholder="User ID"
+              margin="normal"
+              value={user_id}
+              onChange={(e) => setUserId(e.target.value)}
+            />
             <TextField
               fullWidth
               id="username"

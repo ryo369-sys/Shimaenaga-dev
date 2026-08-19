@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\Post as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+
+class Post extends Model
 {
     use Notifiable;
 
@@ -19,16 +20,13 @@ class User extends Authenticatable
     // 一括保存・更新を許可するカラム（安全対策）
     protected $fillable = [
         'user_id',
-        'username',
-        'password',
-        'email',
-        'gender',
-        'age',
-    ];
-
-    // JSON変換時に非表示にするカラム（パスワードなどを隠す）
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'user_name',
+        'content',
+        'image_path',
+        'is_shimaenaga',
+        'likes_count',
+        'shares_count',
+        'created_at',
+        'updated_at',
     ];
 }

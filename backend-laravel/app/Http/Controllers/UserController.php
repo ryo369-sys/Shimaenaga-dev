@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+class UserController extends Controller
 {
     public function login(Request $request)
     {
@@ -45,7 +46,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         try {
-            $request->validate([
+            $validated = $request->validate([
                 'user_id' => 'required|string|unique:users,user_id',
                 'username' => 'required|string',
                 'password' => 'required|string|min:6',
@@ -53,13 +54,13 @@ class AuthController extends Controller
                 'gender' => 'required',
                 'age' => 'required|integer',
             ]);
-            User::create([
-                'user_id'  => $validate['user_id'],
+            $user = User::create([
+                'user_id'  => $validated['user_id'],
                 'username' => $validated['username'],
-                'password' => Hash::make($validatedData['password']), // ★必ず Hash::make を使う！
-                'email' => $validate['email'],
-                'gender' => $validate['gender'],
-                'age' => $validate['age'],
+                'password' => Hash::make($validated['password']), // ★必ず Hash::make を使う！
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+                'age' => $validated['age'],
             ]);
             
             return response()->json([
