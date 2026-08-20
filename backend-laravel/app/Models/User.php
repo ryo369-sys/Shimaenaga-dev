@@ -18,7 +18,6 @@ class User extends Authenticatable
 
     // 一括保存・更新を許可するカラム（安全対策）
     protected $fillable = [
-        'user_id',
         'username',
         'password',
         'email',
