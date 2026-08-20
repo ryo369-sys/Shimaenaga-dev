@@ -23,9 +23,6 @@ class Post extends Model
         'user_name',
         'content',
         'image_path',
-        'is_shimaenaga',
-        'likes_count',
-        'shares_count',
         'created_at',
         'updated_at',
     ];

@@ -22,7 +22,7 @@ export const Router = () => {
         }
       />
       
-      <Route path="/dashboard/:useId" element={<Dashboard />} />
+      <Route path="/dashboard/:id" element={<Dashboard />} />
       <Route path="/home" element={<Home />} />
       <Route path="/todo" element={<Todo />} />
       <Route path="/register" element={<Register />} />

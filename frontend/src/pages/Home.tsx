@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { Post } from '../types/Post';
 import { UserLink } from '../components/UserLink';
 import { GrayBox } from '../components/GrayBox'; // ★ 追加: グレーの枠コンポーネント
+import api from '../axios';
 
 export const Timeline: FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -11,7 +12,7 @@ export const Timeline: FC = () => {
   // 1. APIからタイムラインデータを取得する
   const handleFileChange = async () => {
     try {
-      const response = await axios.get<Post[]>('http://localhost:8000/api/timeline');
+      const response = await api.get<Post[]>('/getAllTimeline');
       console.log(response.data);
 
       if (Array.isArray(response.data)) {

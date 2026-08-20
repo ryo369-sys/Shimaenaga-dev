@@ -5,41 +5,33 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\QueryException;
 
 class UserController extends Controller
 {
     public function login(Request $request)
     {
         $request->validate([
-            'user_id' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // 2. Reactからの送信データを取得
-        $userId = $request->input('user_id');
-        $password = $request->input('password');
+        $user = User::where('email', $request->email)->first();
 
-        // 3. Model（User）を使ってDBからユーザーを1件検索
-        $user = User::where('user_id', $userId)->first();
-
-        // 4. ユーザーが存在し、パスワードが一致するか検証
-        if ($user && Hash::check($password, $user->password)) {
-            // 成功時：200 OK でユーザー情報を返却
+        if ($user && Hash::check($request->password, $user->password)) {
             return response()->json([
                 'success' => true,
                 'message' => 'ログインに成功しました',
                 'user' => [
                     'id' => $user->id,
-                    'user_id' => $user->user_id,
                     'username' => $user->username,
                 ],
             ], 200);
         }
 
-        // 失敗時：401 Unauthorized でエラーメッセージを返却
         return response()->json([
             'success' => false,
-            'message' => 'ユーザーIDまたはパスワードが正しくありません',
+            'message' => 'メールアドレスまたはパスワードが正しくありません',
         ], 401);
     }
 
@@ -47,7 +39,6 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validate([
-                'user_id' => 'required|string|unique:users,user_id',
                 'username' => 'required|string',
                 'password' => 'required|string|min:6',
                 'email' => 'required|email',
@@ -55,7 +46,6 @@ class UserController extends Controller
                 'age' => 'required|integer',
             ]);
             $user = User::create([
-                'user_id'  => $validated['user_id'],
                 'username' => $validated['username'],
                 'password' => Hash::make($validated['password']), // ★必ず Hash::make を使う！
                 'email' => $validated['email'],
@@ -68,7 +58,6 @@ class UserController extends Controller
                 'message' => 'ユーザー登録が完了しました',
                 'user' => [
                     'id'       => $user->id,
-                    'user_id'  => $user->user_id,
                     'username' => $user->username,
                 ],
             ], 201);

@@ -15,7 +15,8 @@ import { isAxiosError } from 'axios';
 import api from '../axios'; // ★1. 作成した共通Axiosインスタンスをインポート
 
 export const Login: FC = () => {
-  const [user_id, setUserId] = useState("");
+  const [id, setId] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
@@ -36,7 +37,7 @@ export const Login: FC = () => {
     try {
       // ★1. 共通の api を使って短く記述
       const response = await api.post('/login', {
-        user_id: user_id,
+        email: email,
         password: password
       });
 
@@ -44,8 +45,8 @@ export const Login: FC = () => {
         setMessage('ログイン成功！');
 
         // ★2 & ★3. 階層を response.data.user.user_id に修正し、バックティック `` に変更
-        const targetUserId = response.data.user.user_id;
-        navigate(`/dashboard/${targetUserId}`); 
+        const targetId = response.data.user.id;
+        navigate(`/dashboard/${targetId}`); 
       }
     } catch (error) {
       console.error(error);
@@ -79,12 +80,12 @@ export const Login: FC = () => {
           <div>
             <TextField
               fullWidth
-              id="username"
+              id="email"
               type="text"
-              label="Username"
-              placeholder="Username"
+              label="email"
+              placeholder="email"
               margin="normal"
-              onChange={(e) => setUserId(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               fullWidth
