@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // ★ useNavigate を追加
 import { Button } from "@mui/material";
 import type { Post } from '../types/Post';
 import { UserLink } from '../components/UserLink';
 import { GrayBox } from '../components/GrayBox';
+import { PostForm } from '../components/PostForm';
 import api from '../axios';
 
 const Dashboard: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [posts, setPosts] = useState<Post[]>([]);
+  
+  // ★ 1. ページ遷移用のフックを呼び出す
+  const navigate = useNavigate();
 
   // タイムライン取得関数
   const fetchTimeline = async () => {
     try {
       const response = await api.get('/getAllTimeline');
       
-      // レスポンスが配列か、オブジェクト内の配列か判定してセット
       const timelineData = Array.isArray(response.data) 
         ? response.data 
         : response.data.posts;
@@ -30,18 +33,25 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // 画面が開いた時に自動でタイムラインを取得する
   useEffect(() => {
     fetchTimeline();
   }, []);
 
+  // ★ 2. 枠が押されたときに「投稿詳細ページ」へID付きで移動する処理に修正
   const handlePostClick = (clickedId: number) => {
-    alert(`投稿ID: ${clickedId} の枠が押されました`);
+    // 例: /posts/1 や /posts/15 のようなURLへ遷移する
+    navigate(`/posts/${clickedId}`);
   };
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h2>タイムライン</h2>
+      <PostForm 
+        endpoint="/posts"            // APIの送信先（/store の場合は "/store"）
+        placeholder="今なに設定してる？" // 入力欄の薄い文字（省略可）
+        buttonLabel="投稿する"        // ボタンの文字（省略可）
+        onSuccess={fetchTimeline}    // 送信が成功したら fetchTimeline を実行して画面を最新にする
+      />
       <Button
         variant="contained"
         size="large"
@@ -59,8 +69,10 @@ const Dashboard: React.FC = () => {
             onBoxClick={handlePostClick}
           >
             <div style={{ marginBottom: '8px' }}>
-              {/* post.user_id と post.user_name に修正 */}
-              <UserLink userId={post.user_id || post.userId} userName={post.user_name || post.userName} />
+              <UserLink 
+                userId={post.user_id || post.userId} 
+                userName={post.user_name || post.userName || post.user?.username} 
+              />
             </div>
             <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
               {post.content}
