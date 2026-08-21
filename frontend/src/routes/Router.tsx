@@ -5,7 +5,7 @@ import { Register } from "../pages/Register";
 import { FailedLogin } from "../pages/FailedLogin";
 import  Home  from "../pages/Home";
 import { Todo } from "../pages/todo";
-import  Dashboard  from "../pages/test";
+import  Dashboard  from "../pages/Dashboard";
 import  Profile  from "../pages/Profile";
 import  GetAccuracy  from "../pages/getaccuracy";
 
@@ -22,7 +22,7 @@ export const Router = () => {
         }
       />
       
-      <Route path="/dashboard/:id" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/home" element={<Home />} />
       <Route path="/todo" element={<Todo />} />
       <Route path="/register" element={<Register />} />
