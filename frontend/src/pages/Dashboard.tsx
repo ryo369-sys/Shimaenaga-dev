@@ -28,8 +28,8 @@ const Dashboard: React.FC = () => {
       } else {
         console.error('【警告】配列データの取得に失敗しました');
       }
-    } catch (error) {
-      console.error('通信エラー:', error);
+    } catch (error:any) {
+      console.error('【重要】通信エラー詳細:', error.response?.data);
     }
   };
 
@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
   // ★ 2. 枠が押されたときに「投稿詳細ページ」へID付きで移動する処理に修正
   const handlePostClick = (clickedId: number) => {
     // 例: /posts/1 や /posts/15 のようなURLへ遷移する
-    navigate(`/posts/${clickedId}`);
+    navigate(`/dashboard`);
   };
 
   return (
