@@ -31,8 +31,8 @@ export const PostForm: React.FC<PostFormProps> = ({
 
       setContent(''); // 送信成功したら入力欄を空にする
       if (onSuccess) onSuccess(); // 親側のデータ再取得処理を実行
-    } catch (error) {
-      console.error('送信エラー:', error);
+    } catch (error:any) {
+      console.error('【重要】通信エラー詳細:', error.response?.data);
       alert('送信に失敗しました。ログイン状態を確認してください。');
     } finally {
       setLoading(false);
