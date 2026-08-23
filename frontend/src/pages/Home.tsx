@@ -58,7 +58,7 @@ export const Timeline: FC = () => {
                ユーザーネームと本文を GrayBox に流し込む
             */}
             <div style={{ marginBottom: '8px' }}>
-              <UserLink userId={post.id} userName={post.userName} />
+              <UserLink user_id={post.id} userName={post.userName} />
             </div>
             <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
               {post.content}

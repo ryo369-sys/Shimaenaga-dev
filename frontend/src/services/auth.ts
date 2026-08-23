@@ -8,7 +8,7 @@ export const login = (
   return axios.post(
     "http://localhost:1323/api/login",
     {
-      user_id: userId,
+      userId: userId,
       password: password
     }
   );
@@ -29,7 +29,7 @@ export const register = (
   return axios.post(
     "http://localhost:1323/api/register",
     {
-      user_id: userId,
+      userId: userId,
       password: password
     }
   );

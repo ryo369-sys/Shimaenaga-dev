@@ -13,7 +13,7 @@ import axios from 'axios';
 
 
 export const FastApi = memo(() => {
-  const [userId, setUserId] = useState("test_user"); // テスト用に初期値をセット
+  const [user_id, setUserId] = useState("test_user"); // テスト用に初期値をセット
   const [resultData, setResultData] = useState(null); // レスポンス全体を保持
   const [message, setMessage] = useState("");
 
@@ -31,7 +31,7 @@ export const FastApi = memo(() => {
       
       // AxiosでPHPへPOST送信
       const response = await axios.post('http://localhost:8000/api/fastApi', {
-        user_id: userId
+        user_id: user_id
       });
       
       console.log("PHPからのレスポンス:", response.data);

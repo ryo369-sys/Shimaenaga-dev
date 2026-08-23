@@ -2,7 +2,7 @@
 
 export interface User {
   id: number;
-  user_id: string;
+  userId: string;
   username: string;
 }
 

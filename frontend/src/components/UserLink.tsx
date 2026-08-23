@@ -1,18 +1,18 @@
+// UserLink.tsx
+
 import { Link } from 'react-router-dom';
 
-interface UserLinkProps {
-  userId: number;
-  userName: string;
-}
-
-// ユーザー名をクリックしたらプロフィールへ飛ばす共通部品
-export const UserLink = ({ userId, userName }: UserLinkProps) => {
+export const UserLink = ({ user_id, userName }: { user_id: number; userName: string }) => {
   return (
     <Link 
-      to={`/users/${userId}`} 
-      style={{ textDecoration: 'none', color: '#1da1f2', fontWeight: 'bold' }}
+      to={`/profile/${user_id}`}
+      onClick={(e) => {
+        // ★ これを追加！親要素（GrayBox）のクリックイベントが動くのを防ぐ
+        e.stopPropagation(); 
+      }}
+      style={{ fontWeight: 'bold', textDecoration: 'none', color: '#1da1f2' }}
     >
-      {userName}
+      @{userName}
     </Link>
   );
 };

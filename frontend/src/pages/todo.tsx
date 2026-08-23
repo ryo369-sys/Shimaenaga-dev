@@ -22,7 +22,7 @@ const result = ([
 
 
 export const Todo = memo(() => {
-  const [userId, setUserId] = useState("");
+  const [user_id, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [comment, setComment] = useState("");
 
@@ -39,7 +39,7 @@ export const Todo = memo(() => {
 const onClickTodoGet = async () => {
 
     const response = await todoGet(
-      userId,
+      user_id,
       password,
       comment
     );

@@ -8,7 +8,7 @@ export const birdGet = (
   return axios.post(
     "http://localhost:1323/api/bird",
     {
-      user_id: birdId,
+      userId: birdId,
       password: picture
     }
   );
