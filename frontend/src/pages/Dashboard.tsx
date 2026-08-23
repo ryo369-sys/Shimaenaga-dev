@@ -6,9 +6,10 @@ import { UserLink } from '../components/UserLink';
 import { GrayBox } from '../components/GrayBox';
 import { PostForm } from '../components/PostForm';
 import api from '../axios';
+import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { user_id } = useParams<{ user_id: string }>();
   const [posts, setPosts] = useState<Post[]>([]);
   
   // ★ 1. ページ遷移用のフックを呼び出す
@@ -23,6 +24,8 @@ const Dashboard: React.FC = () => {
         ? response.data 
         : response.data.posts;
 
+        console.log(response.data[0].user_id)
+
       if (Array.isArray(timelineData)) {
         setPosts(timelineData);
       } else {
@@ -36,12 +39,6 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     fetchTimeline();
   }, []);
-
-  // ★ 2. 枠が押されたときに「投稿詳細ページ」へID付きで移動する処理に修正
-  const handlePostClick = (clickedId: number) => {
-    // 例: /posts/1 や /posts/15 のようなURLへ遷移する
-    navigate(`/dashboard`);
-  };
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
@@ -62,30 +59,27 @@ const Dashboard: React.FC = () => {
       </Button>
 
       <div style={{ marginTop: '20px' }}>
-        {posts.map((post: any) => (
-          <GrayBox 
-            key={post.id} 
-            postId={post.id} 
-            onBoxClick={handlePostClick}
-          >
-            <div style={{ marginBottom: '8px' }}>
-              <UserLink 
-                userId={post.user_id || post.userId} 
-                userName={post.user_name || post.userName || post.user?.username} 
-              />
-            </div>
-            <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
-              {post.content}
-            </p>
-          </GrayBox>
-        ))}
-
-        <div style={{ padding: '20px', marginTop: '40px' }}>
-          <h2>ダッシュボード</h2>
-          <p>ようこそ、 <strong>{id}</strong> さん！</p>
-        </div>
+  {posts.map((post: any) => (
+    <GrayBox 
+      key={post.id} 
+      postId={post.id} 
+      // 投稿カード全体のクリックは投稿詳細へ（例: /posts/1）
+      onBoxClick={() => navigate(`/posts/${post.id}`)}
+    >
+      <div style={{ marginBottom: '8px' }}>
+        {/* ユーザー名のクリックはプロフィールへ（UserLink内でstopPropagationしているため親は発火しない） */}
+        <UserLink 
+          user_id={post.user_id || post.user_id} 
+          userName={post.user_name || post.userName || post.user?.username} 
+        />
       </div>
+      <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
+        {post.content}
+      </p>
+    </GrayBox>
+    ))}
     </div>
+  </div>
   );
 };
 

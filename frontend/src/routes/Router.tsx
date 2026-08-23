@@ -27,7 +27,7 @@ export const Router = () => {
       <Route path="/todo" element={<Todo />} />
       <Route path="/register" element={<Register />} />
       <Route path="/fail_login" element={<FailedLogin />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile/:user_id" element={<Profile />} />
       <Route path="/GetAccuracy" element={<GetAccuracy  />} />
     </Routes>
   );
