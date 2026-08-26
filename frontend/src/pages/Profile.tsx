@@ -1,19 +1,31 @@
-// Dashboard.tsx
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { FollowButton } from '../components/Profile_follower';
 
-const Profile: React.FC = () => {
+export const Profile: React.FC = () => {
+  const [followerCount, setFollowerCount] = useState(10); // 仮の初期フォロワー数
+  const [isFollowing, setIsFollowing] = useState(false);
 
-  const { user_id } = useParams<{ user_id: string }>();
+  // 子（ボタン）でフォロー状態が変わった時に呼ばれる関数
+  const handleFollowToggle = (newIsFollowing: boolean) => {
+    setIsFollowing(newIsFollowing);
+    // フォローされたら +1、解除されたら -1 する
+    setFollowerCount((prev) => (newIsFollowing ? prev + 1 : prev - 1));
+  };
 
-  
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>ダッシュボード</h2>
-      <p>ログインに成功した人だけが見られる秘密のページです！</p>
-      <p>ようこそ、 <strong>{user_id ?? 'ゲスト'}</strong> さん！</p>
+    <div>
+      <h2>ユーザープロフィール</h2>
+      <p>フォロワー数: {followerCount} 人</p>
+
+      {/* 子コンポーネントの配置 */}
+      <FollowButton
+        targetUserId={123}
+        initialIsFollowing={isFollowing}
+        onFollowToggle={handleFollowToggle}
+      />
     </div>
   );
 };
+
 
 export default Profile;

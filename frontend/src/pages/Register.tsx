@@ -47,7 +47,7 @@ const handleregister = async () => {
         setMessage('新規作成成功！');
         // 🚀 成功したらダッシュボードページへジャンプ！
         const id = response.data.user.id;
-        navigate(`/Home/${id}`);
+        navigate(`/dashboard`);
       } else {
         setMessage(response.data.message || '新規作成失敗');
       }
