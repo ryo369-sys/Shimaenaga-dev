@@ -3,12 +3,8 @@ import { useNavigate } from "react-router-dom";
 const RetuenBotton = () => {
     const navigate = useNavigate();
 
-    // 詳細画面に遷移するボタン押下時処理
-    const clickInfo = () => {
-        navigate('/home');
-    };
-
-    const clickBack = () => {
+    //一つ前のページに遷移
+        const clickBack = () => {
         navigate(-1);
     };
 
@@ -18,5 +14,6 @@ const RetuenBotton = () => {
         </>
     )
 }
+
 
 export default RetuenBotton;

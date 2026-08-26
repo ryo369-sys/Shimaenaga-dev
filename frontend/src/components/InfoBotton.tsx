@@ -4,13 +4,13 @@ const InfoBotton = () => {
     const navigate = useNavigate();
 
     // 詳細画面に遷移するボタン押下時処理
-    const clickInfo = () => {
-        navigate('/home');
+    const click = () => {
+        navigate('/dashboard');
     };
 
     return (
         <>
-            <button onClick={clickInfo}>Homeに戻る</button>
+            <button onClick={click}>ダッシュボードに戻る</button>
         </>
     )
 }
