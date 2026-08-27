@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\FollowController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,3 +22,7 @@ Route::get('/getTimeline', [PostController::class, 'getTimeline']);
 Route::get('/getAllTimeline', [PostController::class, 'getAllTimeline']);
 
 Route::post('/posts', [PostController::class, 'store']);
+
+Route::get('/follower/{id}', [FollowController::class, 'followersCount']);
+
+

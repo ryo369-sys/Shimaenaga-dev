@@ -10,11 +10,15 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public function followers()
+    {
+        // follows テーブルの followed_id をキーにして users テーブルを取得
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
+    }
+
     public $timestamps = false;
     // updated_at のみ無効化したい場合
     const UPDATED_AT = null;
-    // テーブル名が 'users' 以外（例: 'user_tbl'）の場合は指定
-    // protected $table = 'users';
 
     // 一括保存・更新を許可するカラム（安全対策）
     protected $fillable = [
