@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class FollowController extends Controller
 {
@@ -16,7 +17,7 @@ class FollowController extends Controller
 
     return response()->json([
         'user_id'         => $user->id,
-        'user_name'       => $user->name,
+        'user_name'       => $user->username,
         // SQLでリアルタイムに件数をカウント
         'following_count' => $user->followings()->count(), // フォローしている数
         'follower_count'  => $user->followers()->count(),  // フォロワー数

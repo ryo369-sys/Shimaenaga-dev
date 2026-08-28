@@ -10,9 +10,16 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public function followings()
+    {
+        // 外部キー: follower_id (自分), 関連キー: followed_id (相手)
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id');
+    }
+
+    // ② 自分をフォローしているユーザー（フォロワー）一覧を取得するリレーション
     public function followers()
     {
-        // follows テーブルの followed_id をキーにして users テーブルを取得
+        // 外部キー: followed_id (自分), 関連キー: follower_id (相手)
         return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
     }
 
