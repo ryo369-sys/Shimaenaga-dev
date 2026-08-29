@@ -23,6 +23,11 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
     }
 
+    public function replies()
+    {
+        return $this->hasMany(Reply::class);
+    }
+
     public $timestamps = false;
     // updated_at のみ無効化したい場合
     const UPDATED_AT = null;
