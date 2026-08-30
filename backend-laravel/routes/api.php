@@ -18,7 +18,7 @@ Route::post('/login',[UserController::class, 'login']) ;
 
 Route::post('/register', [UserController::class, 'register']);
 
-Route::get('/getTimeline', [PostController::class, 'getTimeline']);
+Route::get('/getTimeline/{user_id}', [PostController::class, 'getTimeline']);
 
 Route::get('/getAllTimeline', [PostController::class, 'getAllTimeline']);
 
