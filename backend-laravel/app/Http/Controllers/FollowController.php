@@ -19,10 +19,10 @@ class FollowController extends Controller
         'user_id'         => $user->id,
         'user_name'       => $user->username,
         // SQLでリアルタイムに件数をカウント
-        'following_count' => $user->followings()->count(), // フォローしている数
-        'follower_count'  => $user->followers()->count(),  // フォロワー数
+        'following_id' => $user->followings()->count(), // フォローしている数
+        'follower_id'  => $user->followers()->count(),  // フォロワー数
         // フォロワーのユーザー一覧（Reactで map 処理しやすい配列）
-        'followers'       => $user->followers, 
+        //'followers'       => $user->followers, 
     ]);
 }
 }

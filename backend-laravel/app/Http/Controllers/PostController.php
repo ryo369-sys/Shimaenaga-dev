@@ -6,13 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Follow;
 
 class PostController extends Controller
 {
-    public function getTimeline($id)
+    public function getTimeline($user_id)
     {
         try {
-            $posts = Post::where('id', $id)->latest()->get();
+            // ① 自分がフォローしているユーザーの ID 一覧を取得 (followed_id)
+            $followingUserIds = Follow::where('follower_id', $user_id)
+                ->pluck('followed_id');
+        
+            $posts = Post::whereIn('user_id', $followingUserIds)
+            ->latest()
+            ->get();
 
             return response()->json([
                 'success' => true,
