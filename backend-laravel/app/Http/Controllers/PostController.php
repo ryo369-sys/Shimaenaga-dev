@@ -78,4 +78,36 @@ class PostController extends Controller
         ], 500);
     }
 }
+
+    public function getImageUrl(Request $request)
+    {
+    // 1. バリデーション
+    $request->validate([
+        'content' => 'required|string',
+        'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    $imagePath = null;
+
+    // 2. 画像がアップロードされていれば保存処理を行う
+    if ($request->hasFile('image')) {
+        // storage/app/public/posts ディレクトリに保存
+        $path = $request->file('image')->store('posts', 'public');
+        $imagePath = $path; // 例: 'posts/abc123xxxx.jpg'
+    }
+
+    // 3. データベースへ保存
+    $post = Post::create([
+        'user_id'    => Auth::id() ?? 1,
+        'content'    => $request->content,
+        'image_path' => $imagePath, // DBの image_path カラムに代入
+    ]);
+
+    // 4. 正しいレスポンスを返す
+    return response()->json([
+        'message' => '投稿に成功しました',
+        'post'    => $post
+    ], 201);
+
+    }
 }

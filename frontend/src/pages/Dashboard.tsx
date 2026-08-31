@@ -6,6 +6,7 @@ import { UserLink } from '../components/UserLink';
 import { GrayBox } from '../components/GrayBox';
 import { PostForm } from '../components/PostForm';
 import axios from '../axios';
+import { PostImage } from '../components/PostImage';
 
 type TabType = 'all' | 'following';
 
@@ -17,7 +18,6 @@ const Dashboard: React.FC = () => {
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>('all');
-  
   const navigate = useNavigate();
 
   // ① 全員のタイムライン取得
@@ -115,6 +115,8 @@ const Dashboard: React.FC = () => {
               <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
                 {post.content}
               </p>
+                <PostImage imagePath={post.image_path}
+              />
             </GrayBox>
           ))
         ) : (
