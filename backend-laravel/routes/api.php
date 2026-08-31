@@ -24,6 +24,8 @@ Route::get('/getAllTimeline', [PostController::class, 'getAllTimeline']);
 
 Route::post('/posts', [PostController::class, 'store']);
 
+Route::post('/posts', [PostController::class, 'getImageUrl']);
+
 Route::get('/follower/{id}', [FollowController::class, 'followersCount']);
 
 // 投稿に対する返信一覧を取得するAPI
