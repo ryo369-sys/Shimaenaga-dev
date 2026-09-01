@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-const RetuenBotton = () => {
+const BackBotton = () => {
     const navigate = useNavigate();
 
     //一つ前のページに遷移
         const clickBack = () => {
         navigate(-1);
     };
-
     return (
         <>
             <button onClick={clickBack}>戻る</button>
@@ -16,4 +15,4 @@ const RetuenBotton = () => {
 }
 
 
-export default RetuenBotton;
+export default BackBotton;

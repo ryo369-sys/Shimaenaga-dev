@@ -23,6 +23,8 @@ class Post extends Model
         'user_name',
         'content',
         'image_path',
+        'label',
+        'accuracy',
         'created_at',
         'updated_at',
     ];

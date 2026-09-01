@@ -1,73 +1,99 @@
 import React, { useState } from 'react';
-import { Button, TextField, Box, IconButton, Typography } from '@mui/material';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import ClearIcon from '@mui/icons-material/Clear';
-import api from '../axios';
-
+import { Box, Button, TextField, Typography, CircularProgress } from '@mui/material';
+import axios from '../axios';
 
 type PostFormProps = {
-  endpoint: string;        // 送信先API
-  placeholder?: string;    // 入力欄のヒントテキスト
-  buttonLabel?: string;    // ボタンの表示文字
-  onSuccess?: () => void;  // 送信完了時に実行する関数
+  endpoint: string;
+  placeholder?: string;
+  buttonLabel?: string;
+  onSuccess?: () => void;
 };
 
 export const PostForm: React.FC<PostFormProps> = ({
   endpoint,
-  placeholder = '内容を入力してください...',
-  buttonLabel = '送信',
+  placeholder = '投稿内容を入力してください',
+  buttonLabel = '投稿する',
   onSuccess,
 }) => {
   const [content, setContent] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
-  // 画像が選択されたときの処理
+  // 画像ファイル選択時のプレビュー生成
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setImageFile(file);
-      // 選択した画像のプレビューURLを生成
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  // 選択した画像をキャンセルする処理
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-  };
-
+  // 投稿送信ハンドラ
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() && !imageFile) return;
 
     setLoading(true);
-
-    // ★ ファイルを送信するため FormData を使用
-    const formData = new FormData();
-    formData.append('content', content);
-    if (imageFile) {
-      formData.append('image', imageFile); // Laravel側で 'image' として受け取る
-    }
+    setStatusMessage('');
 
     try {
-      // Content-Type を multipart/form-data に設定して送信
-      await api.post(endpoint, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      let label: string | null = null;
+      let accuracy: number | null = null;
+
+      // ① 画像がある場合は先に FastAPI へ判定を要求
+      if (imageFile) {
+        setStatusMessage('シマエナガを判別中...');
+        const fastApiFormData = new FormData();
+        fastApiFormData.append('image', imageFile);
+
+        // FastAPI へのリクエスト（レスポンス形式に合わせてプロパティを調整してください）
+        const fastApiResponse = await axios.post(
+          'http://localhost:8000/api/GetAccuracy',
+          fastApiFormData,
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          }
+        );
+
+        // FastAPI のレスポンスデータから取得
+        label = fastApiResponse.data.label ?? null;
+        accuracy = fastApiResponse.data.accuracy ?? null;
+      }
+
+      // ② Laravel 送信用 FormData の構築
+      setStatusMessage('投稿を保存中...');
+      const laravelFormData = new FormData();
+      laravelFormData.append('content', content);
+      
+      if (imageFile) {
+        laravelFormData.append('image', imageFile);
+      }
+      if (label !== null) {
+        laravelFormData.append('label', label);
+      }
+      if (accuracy !== null) {
+        laravelFormData.append('accuracy', String(accuracy));
+      }
+
+      // ③ Laravel へ保存リクエスト
+      await axios.post(endpoint, laravelFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // フォームの初期化
+      // 入力フィールドのクリア
       setContent('');
-      handleRemoveImage();
+      setImageFile(null);
+      setImagePreview(null);
+      setStatusMessage('');
 
-      if (onSuccess) onSuccess();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: any) {
-      console.error('【重要】通信エラー詳細:', error.response?.data);
-      alert('送信に失敗しました。');
+      console.error('投稿エラー:', error.response?.data || error.message);
+      setStatusMessage('投稿に失敗しました。');
     } finally {
       setLoading(false);
     }
@@ -79,47 +105,25 @@ export const PostForm: React.FC<PostFormProps> = ({
         fullWidth
         multiline
         rows={3}
+        placeholder={placeholder}
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder={placeholder}
-        disabled={loading}
-        sx={{ mb: 1 }}
+        sx={{ mb: 1.5 }}
       />
 
-      {/* --- 画像プレビュー表示エリア --- */}
+      {/* 画像プレビュー領域 */}
       {imagePreview && (
-        <Box sx={{ position: 'relative', display: 'inline-block', mb: 1 }}>
+        <Box sx={{ mb: 1.5, position: 'relative', display: 'inline-block' }}>
           <img
             src={imagePreview}
-            alt="プレビュー"
-            style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px' }}
+            alt="Upload Preview"
+            style={{ maxHeight: '150px', borderRadius: '8px' }}
           />
-          <IconButton
-            size="small"
-            onClick={handleRemoveImage}
-            sx={{
-              position: 'absolute',
-              top: 5,
-              right: 5,
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              color: 'white',
-              '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.8)' },
-            }}
-          >
-            <ClearIcon fontSize="small" />
-          </IconButton>
         </Box>
       )}
 
-      {/* --- アクションエリア（画像選択 ＆ 送信ボタン） --- */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* ファイル選択ボタン (アイコン形式) */}
-        <Button
-          variant="outlined"
-          component="label"
-          startIcon={<PhotoCamera />}
-          disabled={loading}
-        >
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Button variant="outlined" component="label" disabled={loading}>
           画像を選択
           <input
             type="file"
@@ -129,16 +133,21 @@ export const PostForm: React.FC<PostFormProps> = ({
           />
         </Button>
 
-        {/* 送信ボタン */}
         <Button
           type="submit"
           variant="contained"
-          color="primary"
           disabled={loading || (!content.trim() && !imageFile)}
         >
-          {loading ? '送信中...' : buttonLabel}
+          {loading ? <CircularProgress size={24} color="inherit" /> : buttonLabel}
         </Button>
       </Box>
+
+      {/* ステータス / エラー表示 */}
+      {statusMessage && (
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          {statusMessage}
+        </Typography>
+      )}
     </Box>
   );
 };

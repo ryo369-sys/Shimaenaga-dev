@@ -53,61 +53,64 @@ class PostController extends Controller
     try {
         $request->validate([
             'content' => 'required|string|max:1000',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'label'    => 'nullable|string', 
+            'accuracy' => 'nullable|numeric',
         ]);
 
         $user_id = Auth::id() ?? 1;
         $user = User::find($user_id);
+        $imagePath = null;
 
         $user_name = ($user && $user->name) ? $user->name : 'テストユーザー';
+
+            // 2. 画像がアップロードされていれば保存処理を行う
+        if ($request->hasFile('image')) {
+            // storage/app/public/posts ディレクトリに保存
+            $path = $request->file('image')->store('posts', 'public');
+            $imagePath = $path; // 例: 'posts/abc123xxxx.jpg'
+        }
 
         $post = Post::create([
             'user_id' => $user_id,
             'user_name' => $user_name,
             'content' => $request->content,
+            'image_path' => $imagePath,
+            'label'      => $request->label,
+            'accuracy'   => $request->accuracy,
         ]);
 
         return response()->json([
             'message' => '投稿に成功しました',
             'post'    => $post
         ], 201);
-
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
         // ★ エラーの正体を React 側（レスポンス）に返すように変更
         return response()->json([
             'error_detail' => $e->getMessage()
-        ], 500);
+            ], 500);
+        }
     }
-}
 
-    public function getImageUrl(Request $request)
+    public function getMyPosts($user_id)
     {
-    // 1. バリデーション
-    $request->validate([
-        'content' => 'required|string',
-        'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
+        try {  
+            $posts = Post::where('user_id', $user_id)
+            ->latest()
+            ->get();
 
-    $imagePath = null;
+            return response()->json([
+                'success' => true,
+                'message' => '投稿の取得に成功しました',
+                'posts'   => $posts,
+            ], 200);
 
-    // 2. 画像がアップロードされていれば保存処理を行う
-    if ($request->hasFile('image')) {
-        // storage/app/public/posts ディレクトリに保存
-        $path = $request->file('image')->store('posts', 'public');
-        $imagePath = $path; // 例: 'posts/abc123xxxx.jpg'
-    }
-
-    // 3. データベースへ保存
-    $post = Post::create([
-        'user_id'    => Auth::id() ?? 1,
-        'content'    => $request->content,
-        'image_path' => $imagePath, // DBの image_path カラムに代入
-    ]);
-
-    // 4. 正しいレスポンスを返す
-    return response()->json([
-        'message' => '投稿に成功しました',
-        'post'    => $post
-    ], 201);
-
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => '投稿の取得に失敗しました',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
     }
 }

@@ -16,7 +16,7 @@ class FollowController extends Controller
     $followers = $user->followers;
 
     return response()->json([
-        'user_id'         => $user->id,
+        'user_id'         => $user->userId,
         'user_name'       => $user->username,
         // SQLでリアルタイムに件数をカウント
         'following_id' => $user->followings()->count(), // フォローしている数
