@@ -24,7 +24,7 @@ Route::get('/getAllTimeline', [PostController::class, 'getAllTimeline']);
 
 Route::post('/posts', [PostController::class, 'store']);
 
-Route::post('/posts', [PostController::class, 'getImageUrl']);
+Route::get('/posts/user/{user_id}', [PostController::class, 'getMyPosts']);
 
 Route::get('/follower/{id}', [FollowController::class, 'followersCount']);
 
