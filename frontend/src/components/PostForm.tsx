@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, CircularProgress } from '@mui/material';
 import axios from '../axios';
+import axiosBase from 'axios';
 
 type PostFormProps = {
   endpoint: string;
@@ -46,34 +47,37 @@ export const PostForm: React.FC<PostFormProps> = ({
       if (imageFile) {
         setStatusMessage('シマエナガを判別中...');
         const fastApiFormData = new FormData();
-        fastApiFormData.append('image', imageFile);
+        fastApiFormData.append('file', imageFile);
 
-        // FastAPI へのリクエスト（レスポンス形式に合わせてプロパティを調整してください）
-        const fastApiResponse = await axios.post(
-          'http://localhost:8000/api/GetAccuracy',
+        // FastAPI へのリクエスト
+        const fastApiResponse = await axiosBase.post(
+          'http://localhost:8001/accuracy/judge',
           fastApiFormData,
           {
             headers: { 'Content-Type': 'multipart/form-data' },
           }
         );
 
-        // FastAPI のレスポンスデータから取得
-        label = fastApiResponse.data.label ?? null;
-        accuracy = fastApiResponse.data.accuracy ?? null;
-      }
+        // FastAPI の return と完全に一致するキー名で取得
+        if (fastApiResponse.data.success) {
+          label = fastApiResponse.data.label;       // 例: "シマエナガ"
+          accuracy = fastApiResponse.data.accuracy; // 例: 95.5
+        } else {
+          console.error("判定エラー:", fastApiResponse.data.message);
+        }
+      } // 💡 ★ここで if (imageFile) のブロックを閉じる！★
 
-      // ② Laravel 送信用 FormData の構築
-      setStatusMessage('投稿を保存中...');
+      // Laravel 送信用 FormData への追加
       const laravelFormData = new FormData();
       laravelFormData.append('content', content);
-      
+
       if (imageFile) {
         laravelFormData.append('image', imageFile);
       }
       if (label !== null) {
         laravelFormData.append('label', label);
       }
-      if (accuracy !== null) {
+      if (accuracy !== null && accuracy !== undefined && !isNaN(Number(accuracy))){
         laravelFormData.append('accuracy', String(accuracy));
       }
 

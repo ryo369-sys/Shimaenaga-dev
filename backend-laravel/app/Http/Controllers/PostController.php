@@ -51,7 +51,7 @@ class PostController extends Controller
     public function store(Request $request)
 {
     try {
-        $request->validate([
+        $validated = $request->validate([
             'content' => 'required|string|max:1000',
             'image'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'label'    => 'nullable|string', 
@@ -112,5 +112,19 @@ class PostController extends Controller
                 'error'   => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * 特定のユーザーの「画像付き投稿（判定済み投稿）」のみを取得するAPI
+     */ 
+    public function getUserImagePosts($userId)
+    {
+        // 画像（image_path）が null でなく、指定された user_id の投稿を最新順で取得
+        $posts = Post::where('user_id', $userId)
+                     ->whereNotNull('image_path')
+                     ->orderBy('created_at', 'desc')
+                     ->get();
+
+        return response()->json($posts);
     }
 }

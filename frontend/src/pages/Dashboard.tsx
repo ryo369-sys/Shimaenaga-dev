@@ -7,6 +7,7 @@ import { GrayBox } from '../components/GrayBox';
 import { PostForm } from '../components/PostForm';
 import axios from '../axios';
 import { PostImage } from '../components/PostImage';
+import { ShimaenagaBadge } from '../components/ShimaenagaBadge';
 
 type TabType = 'all' | 'following';
 
@@ -24,35 +25,35 @@ const Dashboard: React.FC = () => {
   const fetchTimeline = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/getAllTimeline');
+      
+      // レスポンスの型に応じて配列を抽出
       const timelineData = Array.isArray(response.data) 
         ? response.data 
-        : response.data.posts;
+        : (response.data?.posts || []);
 
-      if (Array.isArray(timelineData)) {
-        setPosts(timelineData);
-      }
+      console.log('取得したタイムライン:', timelineData);
+      setPosts(timelineData);
     } catch (error: any) {
       console.error('【重要】通信エラー詳細:', error.response?.data);
+      setPosts([]);
     }
   };
 
   // ② フォロー中のタイムライン取得
   const fetchgetTimeline = async () => {
     try {
+      // URLに /api/ を指定
       const response = await axios.get(`http://localhost:8000/api/getTimeline/${currentUserId}`);
       
-      // オブジェクト response.data から posts 配列を安全に抽出
       const timelineData = Array.isArray(response.data) 
         ? response.data 
-        : response.data.posts;
+        : (response.data?.posts || []);
 
-      if (Array.isArray(timelineData)) {
-        setPosts(timelineData);
-      } else {
-        console.error('【警告】配列データの取得に失敗しました');
-      }
+      console.log('フォロー中タイムライン:', timelineData);
+      setPosts(timelineData);
     } catch (error: any) {
       console.error('【重要】通信エラー詳細:', error.response?.data);
+      setPosts([]);
     }
   };
 
@@ -117,6 +118,8 @@ const Dashboard: React.FC = () => {
               </p>
                 <PostImage imagePath={post.image_path}
               />
+              {/* ★ 画像の下に判別バッジを表示 */}
+              <ShimaenagaBadge label={post.label} accuracy={post.accuracy} />
             </GrayBox>
           ))
         ) : (

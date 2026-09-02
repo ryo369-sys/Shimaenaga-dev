@@ -48,6 +48,7 @@ def judgeShimaenaga(image_path):
     # 5. 結果表示
     predicted_class = class_names[preds[0].item()]
     print(f"判定結果：この画像は「{predicted_class}」です！")
+    print(f"percentageの型は{type(percentage)}です！")
     
     # 💡 float型を正しくフォーマットして返す
-    return str(predicted_class), str(f"{result_percentage:.2f}%")
+    return str(predicted_class), round(result_percentage,2)
