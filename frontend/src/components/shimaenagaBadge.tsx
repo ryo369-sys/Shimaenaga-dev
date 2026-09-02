@@ -7,21 +7,28 @@ type ShimaenagaBadgeProps = {
 };
 
 export const ShimaenagaBadge: React.FC<ShimaenagaBadgeProps> = ({ label, accuracy }) => {
-  // label や accuracy が存在しない投稿の場合は何も表示しない
-  if (!label && (accuracy === undefined || accuracy === null)) {
+  // label や accuracy が一切存在しない場合は何も表示しない
+  if (!label && (accuracy === undefined || accuracy === null || accuracy === '')) {
     return null;
   }
 
-  // accuracy が文字列で届いた場合も扱えるように数値へ変換
-  const numericAccuracy = typeof accuracy === 'string' ? parseFloat(accuracy) : accuracy;
-  
-  // 精度を％形式にフォーマット（例: 0.958 -> 95.8% / 95.8 -> 95.8%）
-  const displayAccuracy = numericAccuracy !== null && numericAccuracy !== undefined
+  // 数値変換処理（NaN 対策を含む）
+  let numericAccuracy: number | null = null;
+  if (typeof accuracy === 'number' && !isNaN(accuracy)) {
+    numericAccuracy = accuracy;
+  } else if (typeof accuracy === 'string' && accuracy.trim() !== '') {
+    const parsed = parseFloat(accuracy);
+    if (!isNaN(parsed)) {
+      numericAccuracy = parsed;
+    }
+  }
+
+  // 精度を％形式にフォーマット
+  const displayAccuracy = numericAccuracy !== null
     ? numericAccuracy <= 1 
-      ? (numericAccuracy * 100).toFixed(1) 
+      ? (numericAccuracy).toFixed(1) 
       : numericAccuracy.toFixed(1)
     : null;
-
   // シマエナガ判定かどうかでバッジのスタイルを変更
   const isShimaenaga = label?.includes('シマエナガ') ?? false;
 

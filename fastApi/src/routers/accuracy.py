@@ -6,24 +6,13 @@ from app.predict import judgeShimaenaga
 import io
 from PIL import Image
 from fastapi import APIRouter, UploadFile , File
+from fastapi import HTTPException
 
 # 🌟 このファイル専用のルーターを作る
 router = APIRouter(
     prefix="/accuracy",  # URLの始まりを `/accuracy` にする
     tags=["Accuracy"]
 )
-
-# -------------------------------------------------------------
-# ① 既存：ユーザーの過去データやステータスを取得するGETエンドポイント
-# -------------------------------------------------------------
-@router.get("/{user_id}")
-def get_user_accuracy(user_id: str):
-    # ユーザーの過去の判定結果などを返す処理
-    return {
-        "success": True,
-        "message": f"User: {user_id} の過去データを取得しました",
-        "user_id": user_id
-    }
 
 # -------------------------------------------------------------
 # ② 新規：画像を受け取ってシマエナガ判定を行うPOSTエンドポイント
@@ -36,20 +25,25 @@ async def judge_shimaenaga_image(file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(contents))
         
         #判定を実行
-        name, accuracy = judgeShimaenaga(image)    
-        
+        label, accuracy_raw = judgeShimaenaga(image)   
+
+        if isinstance(accuracy_raw, str):
+            # '%' を消して '62.95' にしてから float にする
+            clean_accuracy = accuracy_raw.replace('%', '').strip()
+            accuracy = float(clean_accuracy)
+        else:
+            accuracy = float(accuracy_raw) 
+
         # 💡 成功した場合のレスポンス
         return {
             "success": True,
             "message": "画像の判定が完了しました",
-            "name": name,
-            "accuracy": accuracy
+            "label": label,
+            "accuracy": float(accuracy)
         }
     except Exception as e:
         # 💡 画像が壊れている・判定処理でエラーが出た場合のレスポンス
-        return {
-            "success": False,
-            "message": f"画像の判定に失敗しました: {str(e)}",
-            "name": None,
-            "accuracy": 0.0
-        }
+        raise HTTPException(
+            status_code=500,
+            detail=f"画像の判定に失敗しました: {str(e)}"
+        )
