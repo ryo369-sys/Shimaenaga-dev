@@ -127,4 +127,34 @@ class PostController extends Controller
 
         return response()->json($posts);
     }
+
+    /**
+     * 自分の投稿を削除するAPI
+     */ 
+    public function destroyPosts(Request $request, $id)
+    {
+        $post = Post::find($id);
+       if (!$post) {
+            return response()->json(['message' => '投稿が見つかりません'], 404);
+        }
+
+        // 💡 1. ログイン中のID、取れなければリクエストBodyの user_id を取得
+        $currentUserId = auth()->id() ?? $request->input('user_id');
+
+        // 💡 2. (int) で型を揃えて比較（型の違いによる不一致を防ぐ）
+        if ((int)$post->user_id !== (int)$currentUserId) {
+            return response()->json([
+                'message' => '削除権限がありません',
+                'debug' => [
+                    'post_user_id' => $post->user_id,
+                    'current_user_id' => $currentUserId,
+                ]
+            ], 403);
+        }
+
+        $post->delete();
+
+        return response()->json(['message' => '投稿を削除しました']);
+    }
+
 }

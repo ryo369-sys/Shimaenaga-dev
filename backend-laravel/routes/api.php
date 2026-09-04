@@ -26,6 +26,8 @@ Route::post('/posts', [PostController::class, 'store']);
 
 Route::get('/posts/user/{user_id}', [PostController::class, 'getMyPosts']);
 
+Route::delete('/posts/{post_id}', [PostController::class, 'destroyPosts']);
+
 Route::get('/follower/{id}', [FollowController::class, 'followersCount']);
 
 // 投稿に対する返信一覧を取得するAPI
@@ -33,3 +35,7 @@ Route::get('/posts/{postId}/replies', [ReplyController::class, 'repliesIndex']);
 
 // 投稿に対して返信を送るAPI
 Route::post('/posts/{postId}/replies', [ReplyController::class, 'repliesStore']);
+
+
+
+
