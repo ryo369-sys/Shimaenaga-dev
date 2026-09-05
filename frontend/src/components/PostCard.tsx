@@ -5,6 +5,7 @@ import { UserLink } from './UserLink';
 import { PostImage } from './PostImage';
 import { ShimaenagaBadge } from './ShimaenagaBadge';
 import type { Post } from '../types/Post';
+import { LikeBotton } from './LikeButton';
 import axios from '../axios';
 
 // 💡 1. 引数（Props）の型をしっかり宣言
@@ -17,6 +18,9 @@ type PostCardProps = {
 // 💡 2. 引数に型を適用
 export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDeleteSuccess }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const [isLiked, setIsLiked] = useState<boolean>(post.is_liked || false);
+  const [likeCount, setLikeCount] = useState<number>(post.likes_count || 0);
 
   // 三点リーダーをクリックしたとき
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
@@ -47,6 +51,36 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
       alert('投稿の削除に失敗しました。');
     }
   };
+
+  const handleLikeToggle = async () => {
+    // 画面上の表示を先につじつま合わせ（楽観的UI更新）
+    const nextIsLiked = !isLiked;
+    const nextLikeCount = nextIsLiked ? likeCount + 1 : likeCount - 1;
+
+    setIsLiked(nextIsLiked);
+    setLikeCount(nextLikeCount);
+
+    try {
+      if (nextIsLiked) {
+        // いいね追加 API
+        await axios.post(`/posts/${post.id}/like`, {
+          user_id: currentUserId,
+        });
+      } else {
+        // いいね解除 API
+        await axios.delete(`/posts/${post.id}/like`, {
+          data: { user_id: currentUserId },
+        });
+      }
+    } catch (error) {
+      console.error('いいね処理エラー:', error);
+      // 通信失敗時は画面の状態を元に戻す
+      setIsLiked(isLiked);
+      setLikeCount(likeCount);
+      alert('いいねの処理に失敗しました。');
+    }
+  }
+
 
   // 自分の投稿かどうか判定
   const isOwner = Number(post.user_id) === Number(currentUserId);
@@ -105,6 +139,11 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
 
       {/* 💡 判定バッジ表示 */}
       <ShimaenagaBadge label={post.label} accuracy={post.accuracy} />
+      <LikeBotton
+        status={isLiked}
+        likeCount={likeCount}
+        onToggle={handleLikeToggle}
+      />
     </Card>
   );
 };

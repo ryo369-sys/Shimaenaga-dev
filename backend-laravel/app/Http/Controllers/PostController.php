@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Follow;
+use App\Models\Like;
 
 class PostController extends Controller
 {
@@ -36,11 +37,26 @@ class PostController extends Controller
         }
     }
 
-    public function getAllTimeline()
+    public function getAllTimeline(Request $request)
 {
     try {
-        $posts = Post::latest()->get();
+        // テスト用: クエリパラメータやヘッダーから user_id を取得（デフォルト 1）
+        $currentUserId = auth()->id() ?? $request->input('user_id', 1);
+
+        $posts = Post::with(['user'])
+            ->withCount('likes') // 💡 likes_count を自動集計
+            ->latest()
+            ->get()
+            ->map(function ($post) use ($currentUserId) {
+                // 💡 自分がいいね済みかを boolean で判定して追加
+                $post->is_liked = $post->likes()
+                    ->where('user_id', $currentUserId)
+                    ->exists();
+                return $post;
+            });
+
         return response()->json($posts, 200);
+
     } catch (\Throwable $e) {
         return response()->json([
             'error_detail' => $e->getMessage()

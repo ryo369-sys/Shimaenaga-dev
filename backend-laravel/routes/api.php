@@ -8,6 +8,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\LikeController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,6 +36,10 @@ Route::get('/posts/{postId}/replies', [ReplyController::class, 'repliesIndex']);
 
 // 投稿に対して返信を送るAPI
 Route::post('/posts/{postId}/replies', [ReplyController::class, 'repliesStore']);
+
+Route::post('/posts/{post_id}/like', [LikeController::class, 'isLike']);
+
+Route::delete('/posts/{post_id}/like', [LikeController::class, 'disLike']);
 
 
 
