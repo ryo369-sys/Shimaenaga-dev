@@ -12,4 +12,6 @@ export type Post = {
   };
   created_at?: string;
   updated_at?: string;
+  is_liked?: boolean;
+  likes_count?: number;
 };
