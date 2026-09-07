@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Card, IconButton, Menu, MenuItem } from '@mui/material';
+import { 
+  Card, IconButton, Menu, MenuItem,
+  Button, RadioGroup, FormControlLabel, Radio, TextField, FormControl, FormLabel,
+  Dialog, DialogTitle, DialogContent, DialogActions 
+} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { UserLink } from './UserLink';
 import { PostImage } from './PostImage';
@@ -8,30 +12,53 @@ import type { Post } from '../types/Post';
 import { LikeBotton } from './LikeButton';
 import axios from '../axios';
 
-// 💡 1. 引数（Props）の型をしっかり宣言
 type PostCardProps = {
   post: Post;
   currentUserId: number;
   onDeleteSuccess: (deletedId: number) => void;
 };
 
-// 💡 2. 引数に型を適用
+interface ReportPayload {
+  post_id: number;
+  reported_user_id: number;
+  user_id: number;
+  reason: string;
+  comment: string;
+}
+
 export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDeleteSuccess }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [isLiked, setIsLiked] = useState<boolean>(post.is_liked || false);
   const [likeCount, setLikeCount] = useState<number>(post.likes_count || 0);
 
-  // 三点リーダーをクリックしたとき
+  // 通報用 State
+  const [openReport, setOpenReport] = useState(false);
+  const [selectedReason, setSelectedReason] = useState<string>('');
+  const [commentText, setCommentText] = useState<string>('');
+
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation(); // 親要素への伝播を防止
+    e.stopPropagation();
     setAnchorEl(e.currentTarget);
   };
 
-  // メニューを閉じるとき
   const handleClose = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setAnchorEl(null);
+  };
+
+  // ダイアログを閉じる
+  const handleCloseDialog = () => {
+    setOpenReport(false);
+    setSelectedReason('');
+    setCommentText('');
+  };
+
+  // 通報メニューを押した時
+  const handleOpenReportDialog = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleClose();
+    setOpenReport(true);
   };
 
   // 削除処理
@@ -43,17 +70,17 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
 
     try {
       await axios.delete(`/posts/${post.id}`, {
-          data: { user_id: currentUserId }
-        });
-      onDeleteSuccess(post.id); // 親（Dashboard）の State を更新
+        data: { user_id: currentUserId }
+      });
+      onDeleteSuccess(post.id);
     } catch (error) {
       console.error('削除失敗:', error);
       alert('投稿の削除に失敗しました。');
     }
   };
 
+  // いいね処理
   const handleLikeToggle = async () => {
-    // 画面上の表示を先につじつま合わせ（楽観的UI更新）
     const nextIsLiked = !isLiked;
     const nextLikeCount = nextIsLiked ? likeCount + 1 : likeCount - 1;
 
@@ -62,27 +89,43 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
 
     try {
       if (nextIsLiked) {
-        // いいね追加 API
-        await axios.post(`/posts/${post.id}/like`, {
-          user_id: currentUserId,
-        });
+        await axios.post(`/posts/${post.id}/like`, { user_id: currentUserId });
       } else {
-        // いいね解除 API
-        await axios.delete(`/posts/${post.id}/like`, {
-          data: { user_id: currentUserId },
-        });
+        await axios.delete(`/posts/${post.id}/like`, { data: { user_id: currentUserId } });
       }
     } catch (error) {
       console.error('いいね処理エラー:', error);
-      // 通信失敗時は画面の状態を元に戻す
       setIsLiked(isLiked);
       setLikeCount(likeCount);
       alert('いいねの処理に失敗しました。');
     }
-  }
+  };
 
+  // 通報送信処理
+  const handleReportSubmit = async () => {
+    if (!selectedReason) {
+      alert('通報理由を選択してください。');
+      return;
+    }
 
-  // 自分の投稿かどうか判定
+    const payload: ReportPayload = {
+      post_id: post.id,
+      reported_user_id: post.user_id,
+      user_id: currentUserId,
+      reason: selectedReason,
+      comment: commentText,
+    };
+
+    try {
+      await axios.post('/reportPost', payload);
+      alert('通報を受け付けました。');
+      handleCloseDialog();
+    } catch (error) {
+      console.error('通報処理エラー:', error);
+      alert('通報の処理に失敗しました。');
+    }
+  };
+
   const isOwner = Number(post.user_id) === Number(currentUserId);
 
   return (
@@ -95,7 +138,6 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
         borderRadius: 2 
       }}
     >
-      {/* 右上の三点リーダーボタン */}
       <IconButton
         onClick={handleClick}
         size="small"
@@ -104,7 +146,6 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
         <MoreVertIcon />
       </IconButton>
 
-      {/* ドロップダウンメニュー */}
       <Menu 
         anchorEl={anchorEl} 
         open={Boolean(anchorEl)} 
@@ -115,13 +156,12 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
             削除する
           </MenuItem>
         ) : (
-          <MenuItem onClick={(e) => { e.stopPropagation(); alert('通報機能は準備中です'); handleClose(); }}>
+          <MenuItem onClick={handleOpenReportDialog} sx={{ color: 'error.main' }}>
             通報する
           </MenuItem>
         )}
       </Menu>
 
-      {/* ユーザー名リンク */}
       <div style={{ marginBottom: '8px' }}>
         <UserLink 
           user_id={post.user_id} 
@@ -129,21 +169,52 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
         />
       </div>
 
-      {/* 投稿本文 */}
       <p style={{ margin: '0 0 8px 0', whiteSpace: 'pre-wrap' }}>
         {post.content}
       </p>
 
-      {/* 💡 画像表示 */}
       <PostImage imagePath={post.image_path} />
-
-      {/* 💡 判定バッジ表示 */}
       <ShimaenagaBadge label={post.label} accuracy={post.accuracy} />
+      
       <LikeBotton
         status={isLiked}
         likeCount={likeCount}
         onToggle={handleLikeToggle}
       />
+
+      {/* 💡 ここにダイアログを追加しました */}
+      <Dialog open={openReport} onClose={handleCloseDialog} fullWidth maxWidth="xs">
+        <DialogTitle>投稿の通報</DialogTitle>
+        <DialogContent>
+          <FormControl component="fieldset" margin="dense" fullWidth>
+            <FormLabel component="legend">通報の理由</FormLabel>
+            <RadioGroup
+              value={selectedReason}
+              onChange={(e) => setSelectedReason(e.target.value)}
+            >
+              <FormControlLabel value="spam" control={<Radio />} label="スパム・宣伝目的" />
+              <FormControlLabel value="harassment" control={<Radio />} label="誹謗中傷・ハラスメント" />
+              <FormControlLabel value="other" control={<Radio />} label="その他" />
+            </RadioGroup>
+          </FormControl>
+
+          <TextField
+            margin="dense"
+            label="詳細コメント（任意）"
+            fullWidth
+            multiline
+            rows={3}
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>キャンセル</Button>
+          <Button onClick={handleReportSubmit} color="error" variant="contained">
+            送信する
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

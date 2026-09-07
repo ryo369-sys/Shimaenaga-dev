@@ -9,6 +9,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -41,6 +42,6 @@ Route::post('/posts/{post_id}/like', [LikeController::class, 'isLike']);
 
 Route::delete('/posts/{post_id}/like', [LikeController::class, 'disLike']);
 
-
+Route::post('/reportPost', [ReportController::class, 'reportPost']);
 
 
