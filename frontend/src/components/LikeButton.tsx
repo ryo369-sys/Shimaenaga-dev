@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import React from 'react';
+import { IconButton, Typography, Box } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import IconButton from '@mui/material/IconButton';
 
-type LikeBottonProps = {
-  status: boolean;
-  likeCount?: number;
-  onToggle: () => void;
+type LikeButtonProps = {
+  status: boolean;      // いいねしているかどうか (isLiked)
+  likeCount: number;    // いいねの数
+  onToggle: () => void; // クリックされた時に呼ばれる関数
 };
 
-export const LikeBotton: React.FC<LikeBottonProps> = ({status, likeCount ,onToggle}) => {
+export const LikeButton: React.FC<LikeButtonProps> = ({ status, likeCount, onToggle }) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-      {/* いいねアイコンボタン */}
-      <IconButton
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <IconButton 
         onClick={(e) => {
-          e.stopPropagation(); // 親要素（カード）へのクリック伝播を防止
-          onToggle();          // 親から渡された関数を実行
-        }}
+          e.stopPropagation(); // 投稿詳細への遷移など、親のクリックを防止
+          onToggle();
+        }} 
+        color={status ? 'error' : 'default'}
         size="small"
-        sx={{ color: status ? 'error.main' : 'text.secondary' }}
       >
-        {/* status が true なら赤ハート、false なら枠線ハート */}
-        {status ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+        {status ? <FavoriteIcon sx={{ color: '#e91e63' }} /> : <FavoriteBorderIcon />}
       </IconButton>
-
-      {/* いいね数表示 */}
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{ ml: 0.5, color: 'text.secondary' }}>
         {likeCount}
       </Typography>
     </Box>

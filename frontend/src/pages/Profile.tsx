@@ -6,63 +6,83 @@ import { UserLink } from '../components/UserLink';
 import { GrayBox } from '../components/GrayBox';
 import axios from '../axios';
 import { PostImage } from '../components/PostImage';
+import { FollowStats } from '../components/FollowStats';
+import { FollowButton } from '../components/FollowButton';
 
-// タブの型定義（自分の投稿 / 判別したシマエナガ）
+// タブの型定義
 type ProfileTabType = 'my_posts' | 'shimaenaga';
 
 const Profile: React.FC = () => {
-  const { user_id } = useParams<{ user_id: string }>();
+  // 💡 URLのパラメータから user_id または id を取得（ルート定義に合わせて対応）
+  const params = useParams<{ user_id?: string; id?: string }>();
   
-  // テスト用: URLに user_id が無い場合は仮で "1" を使用
-  const currentUserId = user_id || '1';
+  // ログイン中のユーザーID（自分）
+  const currentUserId = Number(localStorage.getItem('currentUserId')) || 1;
+
+  // 💡 表示対象のプロフィールユーザーID（URLに無い場合は自分を表示）
+  const profileUserId = Number(params.user_id || params.id) || currentUserId;
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [activeTab, setActiveTab] = useState<ProfileTabType>('my_posts');
   const navigate = useNavigate();
 
-  // ① 自分の投稿を取得する関数
-  const fetchMyPosts = async () => {
+  // ① 該当ユーザーの投稿を取得する関数
+  const fetchUserPosts = async () => {
     try {
-      // 自分の投稿を取得するAPI (例: /api/posts/user/1)
-      const response = await axios.get(`http://localhost:8000/api/posts/user/${currentUserId}`);
+      // 💡 currentUserId ではなく profileUserId の投稿を取得
+      const response = await axios.get(`http://localhost:8000/api/posts/user/${profileUserId}`);
       
       const timelineData = Array.isArray(response.data) 
         ? response.data 
         : response.data.posts;
 
-        console.log(response.data.posts)
-
       if (Array.isArray(timelineData)) {
         setPosts(timelineData);
       }
     } catch (error: any) {
-      console.error('【重要】自分の投稿の取得エラー:', error.response?.data);
+      console.error('【重要】ユーザー投稿の取得エラー:', error.response?.data);
     }
   };
 
   // ② 判別したシマエナガ画像を取得する関数（※将来用）
   const fetchShimaenagaImages = async () => {
-    // 今は判別機能を実装しないため、空配列にしておく
     setPosts([]);
   };
 
-  // ③ タブ切り替え時に適切なAPIを実行する関数
+  // ③ タブ切り替え時または表示対象ユーザーが変わった時に再読み込み
   const loadProfileData = () => {
     if (activeTab === 'my_posts') {
-      fetchMyPosts();
+      fetchUserPosts();
     } else {
       fetchShimaenagaImages();
     }
   };
 
-  // activeTab が変わった時に自動で読み込む
+  // activeTab または profileUserId が変わった時に読み込む
   useEffect(() => {
     loadProfileData();
-  }, [activeTab]);
+  }, [activeTab, profileUserId]);
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2>マイプロフィール</h2>
+      <h2>
+        {profileUserId === currentUserId ? 'マイプロフィール' : 'ユーザープロフィール'}
+      </h2>
+      
+      <div className="profile-header" style={{ marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <h3>ユーザーID: {profileUserId}</h3>
+
+          {/* 💡 対象ユーザー(profileUserId) と 自分(currentUserId) を渡す */}
+          <FollowButton 
+            targetUserId={profileUserId} 
+            currentUserId={currentUserId} 
+          />
+        </div>
+
+        {/* 💡 対象ユーザーのフォロー/フォロワー数を表示 */}
+        <FollowStats userId={profileUserId} />
+      </div>
 
       {/* --- タブ切り替えボタン --- */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
@@ -70,7 +90,7 @@ const Profile: React.FC = () => {
           variant={activeTab === 'my_posts' ? 'contained' : 'outlined'}
           onClick={() => setActiveTab('my_posts')}
         >
-          自分の投稿
+          {profileUserId === currentUserId ? '自分の投稿' : '投稿一覧'}
         </Button>
         <Button
           variant={activeTab === 'shimaenaga' ? 'contained' : 'outlined'}
@@ -84,7 +104,6 @@ const Profile: React.FC = () => {
       {/* --- コンテンツ表示エリア --- */}
       <div style={{ marginTop: '20px' }}>
         {activeTab === 'my_posts' ? (
-          /* 自分の投稿タブの表示 */
           posts.length > 0 ? (
             posts.map((post: any) => (
               <GrayBox 
@@ -110,7 +129,6 @@ const Profile: React.FC = () => {
             </p>
           )
         ) : (
-          /* 判別したシマエナガタブの表示（プレースホルダー） */
           <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
             判別したシマエナガ画像はまだありません。
           </p>

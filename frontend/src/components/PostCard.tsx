@@ -9,8 +9,9 @@ import { UserLink } from './UserLink';
 import { PostImage } from './PostImage';
 import { ShimaenagaBadge } from './ShimaenagaBadge';
 import type { Post } from '../types/Post';
-import { LikeBotton } from './LikeButton';
+import { LikeButton } from './LikeButton';
 import axios from '../axios';
+import { FollowButton } from './FollowButton';
 
 type PostCardProps = {
   post: Post;
@@ -129,6 +130,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
   const isOwner = Number(post.user_id) === Number(currentUserId);
 
   return (
+    
     <Card 
       sx={{ 
         position: 'relative', 
@@ -167,6 +169,10 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
           user_id={post.user_id} 
           userName={post.user_name || post.userName || post.user?.username || 'ユーザー'} 
         />
+        <FollowButton 
+          targetUserId={Number(post.user_id)} 
+          currentUserId={Number(currentUserId)} 
+        />
       </div>
 
       <p style={{ margin: '0 0 8px 0', whiteSpace: 'pre-wrap' }}>
@@ -176,7 +182,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
       <PostImage imagePath={post.image_path} />
       <ShimaenagaBadge label={post.label} accuracy={post.accuracy} />
       
-      <LikeBotton
+      <LikeButton
         status={isLiked}
         likeCount={likeCount}
         onToggle={handleLikeToggle}

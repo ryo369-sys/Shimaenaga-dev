@@ -32,6 +32,8 @@ Route::delete('/posts/{post_id}', [PostController::class, 'destroyPosts']);
 
 Route::get('/follower/{id}', [FollowController::class, 'followersCount']);
 
+Route::get('/users/{userId}/follow-stats', [FollowController::class, 'followersCount']);
+
 // 投稿に対する返信一覧を取得するAPI
 Route::get('/posts/{postId}/replies', [ReplyController::class, 'repliesIndex']);
 
@@ -44,4 +46,13 @@ Route::delete('/posts/{post_id}/like', [LikeController::class, 'disLike']);
 
 Route::post('/reportPost', [ReportController::class, 'reportPost']);
 
+// 💡 フォロー状態チェック
+Route::get('/users/{userId}/is-following', [FollowController::class, 'isFollowing']);
 
+// 💡 フォロー実行
+Route::post('/users/{userId}/follow', [FollowController::class, 'followers_add']);
+
+// 💡 フォロー解除
+Route::delete('/users/{userId}/follow', [FollowController::class, 'followers_dawn']);
+
+Route::get('/posts/following', [PostController::class, 'getFollowingPosts']);

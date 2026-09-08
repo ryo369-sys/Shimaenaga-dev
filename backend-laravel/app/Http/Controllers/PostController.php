@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Follow;
 use App\Models\Like;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -172,5 +173,26 @@ class PostController extends Controller
 
         return response()->json(['message' => '投稿を削除しました']);
     }
+
+// PostController.php などの記述例
+
+public function getFollowingPosts(Request $request)
+{
+    $currentUserId = auth()->id() ?? $request->query('user_id', 1);
+
+    Log::info('Current User ID:', ['id' => $currentUserId]);
+
+    // 1. 自分がフォローしているユーザーのID一覧を取得
+    $followingUserIds = \App\Models\Follow::where('follower_id', $currentUserId)
+                                          ->pluck('followed_id');
+
+    // 2. フォローしているユーザー（+自分）の投稿のみを取得
+    $posts = Post::whereIn('user_id', $followingUserIds)
+                 ->orderBy('created_at', 'desc')
+                 ->get();
+
+    return response()->json(['posts' => $posts]);
+}
+
 
 }

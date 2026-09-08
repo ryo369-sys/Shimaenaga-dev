@@ -16,13 +16,13 @@ class Reply extends Model
         'image_path',
     ];
 
-    // この返信を書いたユーザーを取得
+    // 💡 ユーザーリレーション
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // この返信がぶら下がっている元投稿を取得
+    // 💡 投稿リレーション
     public function post()
     {
         return $this->belongsTo(Post::class);
