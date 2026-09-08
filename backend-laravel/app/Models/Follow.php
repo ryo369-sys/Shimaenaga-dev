@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Follow extends Model
 {
-    use Notifiable;
+    use HasFactory;
 
-    public $timestamps = false;
-    // updated_at のみ無効化したい場合
-    const UPDATED_AT = null;
+    protected $table = 'follows';
 
     // 一括保存・更新を許可するカラム（安全対策）
     protected $fillable = [

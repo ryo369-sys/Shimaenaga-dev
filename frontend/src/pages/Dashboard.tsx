@@ -5,14 +5,14 @@ import type { Post } from '../types/Post';
 import { PostForm } from '../components/PostForm';
 import axios from '../axios';
 import { PostCard } from '../components/PostCard'; // 💡 作成したPostCardを読み込み
+import { useLocation } from 'react-router-dom';
+
 
 type TabType = 'all' | 'following';
 
 const Dashboard: React.FC = () => {
-  const { user_id } = useParams<{ user_id: string }>();
-  
-  // テスト用: URLにuser_idが無い場合は仮で "1" を使用
-  const currentUserId = user_id || '1';
+  // 渡された state から ID を取得（直アクセスなどの場合はデフォルト値）
+  const currentUserId = Number(localStorage.getItem('currentUserId')) || 1;
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [activeTab, setActiveTab] = useState<TabType>('all');
@@ -36,7 +36,9 @@ const Dashboard: React.FC = () => {
   // ② フォロー中のタイムライン取得
   const fetchgetTimeline = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/getTimeline/${currentUserId}`);
+      const response = await axios.get(`http://localhost:8000/api/posts/following`, {
+      params: { user_id: currentUserId },
+    });
       const timelineData = Array.isArray(response.data) 
         ? response.data 
         : (response.data?.posts || []);
@@ -69,52 +71,53 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h2>タイムライン</h2>
+  <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <h2>タイムライン</h2>
 
-      {/* --- タブ切り替えボタン --- */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-        <Button
-          variant={activeTab === 'all' ? 'contained' : 'outlined'}
-          onClick={() => setActiveTab('all')}
-        >
-          おすすめ（全員）
-        </Button>
-        <Button
-          variant={activeTab === 'following' ? 'contained' : 'outlined'}
-          color="secondary"
-          onClick={() => setActiveTab('following')}
-        >
-          フォロー中
-        </Button>
-      </div>
-
-      <PostForm 
-        endpoint="/posts" 
-        placeholder="今なに設定してる？" 
-        buttonLabel="投稿する" 
-        onSuccess={loadPosts} 
-      />
-
-      <div style={{ marginTop: '20px' }}>
-        {posts.length > 0 ? (
-          posts.map((post: any) => (
-            /* 💡 子コンポーネント (PostCard) へ Props を渡して描画 */
-            <PostCard
-              key={post.id}
-              post={post}
-              currentUserId={Number(currentUserId)}
-              onDeleteSuccess={handleDeletePost}
-            />
-          ))
-        ) : (
-          <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
-            {activeTab === 'all' ? '投稿がありません。' : 'フォロー中のユーザーの投稿はありません。'}
-          </p>
-        )}
-      </div>
+    {/* --- タブ切り替えボタン --- */}
+    <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <Button
+        variant={activeTab === 'all' ? 'contained' : 'outlined'}
+        onClick={() => setActiveTab('all')}
+      >
+        おすすめ（全員）
+      </Button>
+      <Button
+        variant={activeTab === 'following' ? 'contained' : 'outlined'}
+        color="secondary"
+        onClick={() => setActiveTab('following')}
+      >
+        フォロー中
+      </Button>
     </div>
-  );
+
+    {/* --- 投稿フォーム --- */}
+    <PostForm 
+      endpoint="/posts" 
+      placeholder="今なに設定してる？" 
+      buttonLabel="投稿する" 
+      onSuccess={loadPosts} 
+    />
+
+    {/* --- 投稿一覧表示 --- */}
+    <div style={{ marginTop: '20px' }}>
+      {posts.length > 0 ? (
+        posts.map((post: any) => (
+          <PostCard
+            key={post.id}
+            post={post}
+            currentUserId={Number(currentUserId)}
+            onDeleteSuccess={handleDeletePost} // 💡 定義済みの handleDeletePost を渡す
+          />
+        ))
+      ) : (
+        <p style={{ textAlign: 'center', color: '#666', marginTop: '20px' }}>
+          {activeTab === 'all' ? '投稿がありません。' : 'フォロー中のユーザーの投稿はありません。'}
+        </p>
+      )}
+    </div>
+  </div>
+);
 }
 
 export default Dashboard;

@@ -41,12 +41,17 @@ export const Login: FC = () => {
         password: password
       });
 
-      if (response.data.success) {
-        setMessage('ログイン成功！');
+      // APIから返ってきたログインユーザーのIDを取得
+      const userId = response.data.user?.id || response.data.id;
+      if (userId) {
+      // 💡 localStorage に自動保存
+      localStorage.setItem('currentUserId', String(userId));
+      }
 
+      if (response.data.success) {
+        setMessage('ログイン成功！');  
         // ★2 & ★3. 階層を response.data.user.user_id に修正し、バックティック `` に変更
-        const targetId = response.data.user.id;
-        navigate(`/dashboard/${targetId}`); 
+        navigate(`/dashboard`); 
       }
     } catch (error) {
       console.error(error);
