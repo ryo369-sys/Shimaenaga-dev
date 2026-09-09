@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,9 +21,9 @@ Route::post('/login',[UserController::class, 'login']) ;
 
 Route::post('/register', [UserController::class, 'register']);
 
-Route::get('/getTimeline/{user_id}', [PostController::class, 'getTimeline']);
-
 Route::get('/getAllTimeline', [PostController::class, 'getAllTimeline']);
+
+Route::get('/getTimeline/{user_id}', [PostController::class, 'getTimeline']);
 
 Route::post('/posts', [PostController::class, 'store']);
 
@@ -56,3 +57,12 @@ Route::post('/users/{userId}/follow', [FollowController::class, 'followers_add']
 Route::delete('/users/{userId}/follow', [FollowController::class, 'followers_dawn']);
 
 Route::get('/posts/following', [PostController::class, 'getFollowingPosts']);
+
+
+Route::get('/notifications', [NotificationController::class, 'getUserAction']);
+
+Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
+
+Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);

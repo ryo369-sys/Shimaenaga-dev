@@ -2,24 +2,34 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 
-export const LogoutButton: React.FC = () => {
+export const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // 💡 ① localStorage の currentUserId を削除
     localStorage.removeItem('currentUserId');
-
-    // 💡 ② ログイン画面へリダイレクト
-    navigate('/login');
+    navigate('/');
   };
 
   return (
-    <Button 
-      variant="outlined" 
-      color="error" 
-      onClick={handleLogout}
+    <nav
+      style={{
+        position: 'fixed', // 画面の右上に固定表示（スクロールしても固定）
+        top: '16px',
+        right: '16px',
+        zIndex: 1000,     // 他の要素の下に隠れないように前面へ配置
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+      }}
     >
-      ログアウト
-    </Button>
+      <Button 
+        variant="outlined" 
+        color="error" 
+        onClick={handleLogout}
+        size="small"
+      >
+        ログアウト
+      </Button>
+    </nav>
   );
 };

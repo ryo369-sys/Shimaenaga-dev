@@ -12,6 +12,7 @@ import type { Post } from '../types/Post';
 import { LikeButton } from './LikeButton';
 import axios from '../axios';
 import { FollowButton } from './FollowButton';
+import { ReplySection } from '../components/ReplySection';
 
 type PostCardProps = {
   post: Post;
@@ -32,6 +33,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
 
   const [isLiked, setIsLiked] = useState<boolean>(post.is_liked || false);
   const [likeCount, setLikeCount] = useState<number>(post.likes_count || 0);
+  const [showReplies, setShowReplies] = useState(false);
 
   // 通報用 State
   const [openReport, setOpenReport] = useState(false);
@@ -130,7 +132,6 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
   const isOwner = Number(post.user_id) === Number(currentUserId);
 
   return (
-    
     <Card 
       sx={{ 
         position: 'relative', 
@@ -182,13 +183,26 @@ export const PostCard: React.FC<PostCardProps> = ({ post, currentUserId, onDelet
       <PostImage imagePath={post.image_path} />
       <ShimaenagaBadge label={post.label} accuracy={post.accuracy} />
       
-      <LikeButton
-        status={isLiked}
-        likeCount={likeCount}
-        onToggle={handleLikeToggle}
-      />
+      {/* 💡 ボタンエリア */}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
+        <LikeButton
+          status={isLiked}
+          likeCount={likeCount}
+          onToggle={handleLikeToggle}
+        />
 
-      {/* 💡 ここにダイアログを追加しました */}
+        {/* 💡 返信表示トグルボタン */}
+        <Button size="small" onClick={() => setShowReplies(!showReplies)}>
+          {showReplies ? '返信を閉じる' : '返信'}
+        </Button>
+      </div>
+
+      {/* 💡 showRepliesがtrueのときだけ返信エリアを展開 */}
+      {showReplies && (
+        <ReplySection postId={post.id} currentUserId={Number(currentUserId)} />
+      )}
+
+      {/* 💡 通報ダイアログ */}
       <Dialog open={openReport} onClose={handleCloseDialog} fullWidth maxWidth="xs">
         <DialogTitle>投稿の通報</DialogTitle>
         <DialogContent>
