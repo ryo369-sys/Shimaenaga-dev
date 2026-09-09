@@ -37,7 +37,7 @@ AI判定の反映(完了)
 
 ・他の人の投稿（完成）
 
-※戻るボタンなどはnavgate使ってコンポーネットで逐一作成していく（戻るとダッシュボードへ戻るは実装）
+※戻るボタンなどはnavgate使ってコンポーネットで逐一作成していく
 
 [php]
 以下の内容を行うためのDB設計とModelの追加
@@ -89,8 +89,3 @@ fastApi : uvicorn main:app --reload　※main.pyのところで行う
 2. **データ拡張（Data Augmentation）:**
    データ不均衡を解消するため、PyTorch（torchvision.transforms）を用いて、リアルなぬいぐるみ画像に対して「左右反転」「微小な回転（±10度）」のデータ拡張を施し、30枚にアップサンプリングしました。
 
-[ダッシュボード]
--------------------
-
-
-FastApi_ven: .venv\Scripts\activate 実行 uvicorn app.main:app --reload
