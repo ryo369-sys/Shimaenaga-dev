@@ -6,6 +6,7 @@ import { PostForm } from '../components/PostForm';
 import axios from '../axios';
 import { PostCard } from '../components/PostCard'; // 💡 作成したPostCardを読み込み
 import { useLocation } from 'react-router-dom';
+import { ReplySection } from '../components/ReplySection';
 
 
 type TabType = 'all' | 'following';
@@ -18,10 +19,12 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('all');
   const navigate = useNavigate();
 
+  
+
   // ① 全員のタイムライン取得
   const fetchTimeline = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/getAllTimeline');
+      const response = await axios.get('/getAllTimeline');
       const timelineData = Array.isArray(response.data) 
         ? response.data 
         : (response.data?.posts || []);
@@ -69,6 +72,8 @@ const Dashboard: React.FC = () => {
     // 削除された投稿以外を残すことで、再読み込みなしで画面を更新
     setPosts((prevPosts) => prevPosts.filter((p) => p.id !== deletedPostId));
   };
+
+  
 
   return (
   <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
