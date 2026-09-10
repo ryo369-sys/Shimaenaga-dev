@@ -7,6 +7,9 @@ import  Dashboard  from "../pages/Dashboard";
 import  Profile  from "../pages/Profile"
 import  PostDetail  from "../pages/PostDetail"
 import { Navbar } from '../components/Navbar';
+import  NotificationList  from "../pages/NotificationList"
+import { NotificationBell } from '../components/NotificationBell';
+
 
 export const Router = () => {
   return (
@@ -52,6 +55,17 @@ export const Router = () => {
           </>
         }
       />
+      {/* 💡 通知機能（Navbar あり） 
+      <Route
+        path="/notification"
+        element={
+          <>
+            <Navbar />
+            <NotificationList />
+          </>
+        }
+      />
+      */}
     </Routes>
   );
 };

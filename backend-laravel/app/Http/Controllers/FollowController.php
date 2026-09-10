@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Follow;
+use App\Models\Notification;
 
 class FollowController extends Controller
 {
@@ -56,7 +57,14 @@ class FollowController extends Controller
         'follower_id' => $currentUserId,
         'followed_id' => $userId,
     ]);
-
+    
+    Notification::create([
+        'user_id'  => $userId,   // フォローされた人
+        'actor_id' => $currentUserId,  // フォローした人
+        'type'     => 'follow',
+        'is_read'  => false,
+    ]);
+    
     return response()->json(['message' => 'フォローしました']);
 }
 
@@ -68,6 +76,7 @@ class FollowController extends Controller
     Follow::where('follower_id', $currentUserId)
           ->where('followed_id', $userId)
           ->delete();
+    
 
     return response()->json(['message' => 'フォロー解除しました']);
 }

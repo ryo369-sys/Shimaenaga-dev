@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Reply;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+
 
 class ReplyController extends Controller
 {
@@ -29,11 +31,11 @@ class ReplyController extends Controller
         ]);
 
         $imagePath = null;
-
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('replies', 'public');
         }
 
+        // 返信を作成
         $reply = Reply::create([
             'post_id'    => $postId,
             'user_id'    => $request->user_id,
@@ -41,7 +43,21 @@ class ReplyController extends Controller
             'image_path' => $imagePath,
         ]);
 
-        // 💡 ここも 'user:id,name' から 'user' に変更
+        // 投稿データを取得（投稿者の user_id を特定するため）
+        $post = Post::findOrFail($postId);
+
+        // 💡 自分の投稿への返信でない場合のみ通知を作成
+        if ((int)$post->user_id !== (int)$request->user_id) {
+            Notification::create([
+                'user_id'  => $post->user_id,  // 通知を受け取る人（元の投稿者）
+                'actor_id' => $request->user_id, // アクションを起こした人（返信した人）
+                'type'     => 'reply',
+                'post_id'  => $postId,
+                'reply_id' => $reply->id,
+                'is_read'  => false,
+            ]);
+        }
+
         return response()->json($reply->load('user'), 201);
     }
 }

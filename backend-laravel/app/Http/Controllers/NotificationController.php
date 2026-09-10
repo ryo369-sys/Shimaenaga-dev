@@ -7,36 +7,28 @@ use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    /**
-     * 1. ログインユーザーの通知一覧を取得
-     */
+    // 1. 通知一覧取得
     public function getUserAction(Request $request)
+{
+    $userId = $request->query('user_id'); // ?user_id= から取得
+
+    $notifications = Notification::with(['actor', 'post', 'reply'])
+        ->where('user_id', $userId)
+        ->latest()
+        ->take(30)
+        ->get();
+
+    return response()->json($notifications);
+}
+
+    // 2. 未読件数取得
+    public function unreadCount(Request $request)
     {
         $userId = $request->query('user_id');
 
         if (!$userId) {
-            return response()->json(['message' => 'User ID is required'], 400);
+            return response()->json(['unread_count' => 0]);
         }
-
-        $notifications = Notification::with([
-            'actor:id,name,username', // アクションを起こしたユーザー情報
-            'post:id,content',        // 関連投稿（あれば）
-            'reply:id,content'        // 関連返信（あれば）
-        ])
-        ->where('user_id', $userId)
-        ->latest()
-        ->take(30) // 最新30件を取得
-        ->get();
-
-        return response()->json($notifications);
-    }
-
-    /**
-     * 2. 未読通知の件数を取得（バッジ表示用）
-     */
-    public function unreadCount(Request $request)
-    {
-        $userId = $request->query('user_id');
 
         $count = Notification::where('user_id', $userId)
             ->where('is_read', false)
@@ -45,9 +37,7 @@ class NotificationController extends Controller
         return response()->json(['unread_count' => $count]);
     }
 
-    /**
-     * 3. 通知を既読にする
-     */
+    // 3. 単一通知を既読にする
     public function markAsRead(Request $request, $id)
     {
         $notification = Notification::find($id);
@@ -61,9 +51,7 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Notification marked as read']);
     }
 
-    /**
-     * 4. すべての通知を一括で既読にする
-     */
+    // 4. すべて既読にする
     public function markAllAsRead(Request $request)
     {
         $userId = $request->input('user_id');
